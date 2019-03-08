@@ -32,18 +32,26 @@ class webserverHandler(BaseHTTPRequestHandler):
 	def do_POST(self):
 		try:
 			self.send_response(301)
-			ctype, pdict = cgi.parse_header(self.headers.get_header('content-type'))
+			ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
+			print(ctype)			
+			print(pdict)
+			if pdict.get('boundary') is not None:
+				pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
 			if ctype == 'multipart/form-data':
-				fields = cgi.parse_multipart(self.rfile,pdict)
-				messagecontent = fields.get('message')
+				fields = cgi.parse_multipart(self.rfile, pdict)
+				messagecontent = fields.get('message') 
+
+			self.send_response(200)
+			self.send_header('Content-type','text/html')
+			self.end_headers()
 
 			output = ""
 			output += "<html><body>"
 			output += "<h2> Okay, how about this: </h2>"
-			output += "<h1> {} </h1>".format(messagecontent[0])
-
+			output += "<h1> {} </h1>".format(messagecontent[0].decode("utf-8"))
+			output += "</body></html>"	
 			output +="<form method = 'POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name='message' type = 'text' ><input type = 'submit' value = 'Submit'></form>"
-			output += "</html></body>"
+			
 			self.wfile.write(output.encode('utf-8'))
 			print(output)
 		except Exception as e:
