@@ -1,0 +1,506 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"BaseHT",
+				"BaseHTTPRequestHandler"
+			],
+			[
+				"dec",
+				"declarative_base"
+			],
+			[
+				"are",
+				"articles"
+			],
+			[
+				"clean",
+				"clean_item"
+			],
+			[
+				"pho",
+				"photogeneration_level"
+			],
+			[
+				"toy",
+				"toy_story"
+			],
+			[
+				"W",
+				"WordNumber"
+			],
+			[
+				"Line",
+				"LineNumber"
+			],
+			[
+				"file",
+				"file_contents"
+			],
+			[
+				"file_",
+				"file_picker"
+			],
+			[
+				"S",
+				"SHAPE_SIZE"
+			],
+			[
+				"Screen",
+				"SCREEN_SIZE"
+			],
+			[
+				"t",
+				"t"
+			],
+			[
+				"run",
+				"run"
+			],
+			[
+				"d",
+				"draw_triangle"
+			],
+			[
+				"draw",
+				"draw_triangle"
+			],
+			[
+				"fi",
+				"file_name"
+			],
+			[
+				"def",
+				"default_layout"
+			],
+			[
+				"x",
+				"x"
+			],
+			[
+				"g",
+				"g"
+			],
+			[
+				"Efield",
+				"Efield"
+			],
+			[
+				"trace",
+				"trace1"
+			],
+			[
+				"dn",
+				"dnt0"
+			],
+			[
+				"np",
+				"npt0"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: Install Package",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/restaurant"
+	],
+	"file_history":
+	[
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/sqlalchemy/webserver.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/sqlalchemy/database_setup.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/restaurant/database_setup.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/sqlalchemy/lotsofmenus.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/vm/fullstack-nanodegree-vm/vagrant/Frank Sziebert - project_1_logs_analysis/README.md",
+		"/D/vault/flisz/Courses/udacity/fsnd/vm/fullstack-nanodegree-vm/vagrant/Frank Sziebert - project_1_logs_analysis/logs_analysis.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/vm/fullstack-nanodegree-vm/vagrant/project_1/README.md",
+		"/D/vault/flisz/Courses/udacity/fsnd/vm/fullstack-nanodegree-vm/vagrant/project_1/logs_analysis.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/challenge_fibonacci.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/use_context_manager.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/context_manager_as.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/convert_to_integer.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/convert_to_uppercase.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/coroutine_decorator.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/counter.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/coroutine_example.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/even_integers_expression.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/even_integers_function.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/get_longest_name_separate.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/udacity-git-course/new-git-project/index.html",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-2/2_HTMLForms/PostForm.html",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-2/3_MessageboardPartOne/Messageboard.html",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-2/4_MessageboardPartTwo/MessageboardPartTwo.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-3/2_CookieServer/CookieServer.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/vm/fullstack-nanodegree-vm/vagrant/forum/forumdb.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-2/4_MessageboardPartTwo/Messageboard.html",
+		"/C/Users/HODOR/Desktop/generator_tutorial/even_integers_generator.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/incrementer.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/list_comprehension.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/logfile",
+		"/C/Users/HODOR/Desktop/generator_tutorial/reverse_capital.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/router_pipeline.py",
+		"/C/Users/HODOR/Desktop/generator_tutorial/use_coroutine.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/my_bookmark_server/BookmarkServer.py",
+		"/D/vault/flisz/Courses/udacity/fsnd/http-course/course-ud303/Lesson-2/3_MessageboardPartOne/MessageboardPartOne.py",
+		"/C/Users/HODOR/Desktop/vault/loot/me.my/project/kivy-demo/pong/main.py",
+		"/C/Users/HODOR/Desktop/archive.csv",
+		"/C/Users/HODOR/Desktop/vault/loot/me.my/project/kivy-demo/pong/pong.kv",
+		"/C/Users/HODOR/Desktop/new.py",
+		"/C/Users/HODOR/Desktop/udacity/movie_trailer_website/fresh_tomatoes.py",
+		"/C/Users/HODOR/alias.cmd",
+		"/D/downloads/My Guest List.csv",
+		"/C/Users/HODOR/Desktop/custodian.py",
+		"/C/Users/HODOR/Desktop/Project/kivy/hello-world/hello_world.py",
+		"/C/Users/HODOR/Desktop/Residential Lease Agreement _ Free Rental Lease Form (US) _ LawDepot.html",
+		"/C/Users/HODOR/Desktop/vault/.gitconfig",
+		"/C/Users/HODOR/Desktop/vault/ref/Bare Bones Browser",
+		"/C/Users/HODOR/Desktop/vault/lib/python/phy/physics.py",
+		"/C/Users/HODOR/Desktop/vault/lib/python/phy/plot.py",
+		"/C/Users/HODOR/Desktop/vault/tool/cmd/Bare Bones Browser",
+		"/C/Users/HODOR/Desktop/Project/kivy/hello-world/myapp.py",
+		"/C/Users/HODOR/Desktop/Project/pong/.pong.kv.un~",
+		"/C/Users/HODOR/-tree -r master --name-only",
+		"/C/Users/HODOR/Desktop/udacity/check_profanity/check_profanity.py",
+		"/C/Users/HODOR/Desktop/udacity/movie_trailer_website/movie_data.csv",
+		"/C/Users/HODOR/Desktop/udacity/movie_trailer_website/entertainment_center.py",
+		"/C/Users/HODOR/Desktop/udacity/movie_trailer_website/media.py",
+		"/C/Users/HODOR/Desktop/check_profanity.py",
+		"/C/Users/HODOR/Desktop/udacity/.gitignore",
+		"/C/Users/HODOR/Desktop/sample_text2.txt",
+		"/C/Users/HODOR/flisz/firefox/Dockerfile",
+		"/C/Users/HODOR/flisz/jupyter/Dockerfile",
+		"/C/Users/HODOR/flisz/config/jupyter_notebook_config.py",
+		"/C/Users/HODOR/Desktop/sample_text1.txt",
+		"/C/Users/HODOR/.jupyter/jupyter_notebook_config.py",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/udacity/Programming Fundamentals and the Web/code/send_text/send_text.py",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Career/job_search/2017/Stryker/Cover Letter",
+		"/C/Users/HODOR/Desktop/frac1.py",
+		"/C/Users/HODOR/Desktop/frac_gif.py",
+		"/C/Users/HODOR/Desktop/test.py",
+		"/C/Users/HODOR/Desktop/test2.py",
+		"/C/Users/HODOR/Desktop/rename_files.py",
+		"/C/Users/HODOR/Desktop/rename_files/88zed",
+		"/C/Users/HODOR/Desktop/rename_files/30sad48",
+		"/C/Users/HODOR/Desktop/rename_files/10happy2",
+		"/C/Users/HODOR/Desktop/break_time.py",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/ECE520/hw5/hw5.py",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/ECE520/hw5/plot.py",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Career/job_search/2017/Micron/Cover Letter - BCT MQE Quality_FMEA Engineer",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/TA/2017-1Spring/HW12",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/TA/2017-1Spring/HW11_rubric",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/TA/2017-1Spring/HW10_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/flisz/Courses/BSU/TA/2017-1Spring/HW9_rubric.txt",
+		"/C/Users/HODOR/.gitconfig",
+		"/C/Users/HODOR/Desktop/Vault/cmd/Bare Bones Browser",
+		"/C/Users/HODOR/Desktop/Vault/loot/jupyter_import.py",
+		"//LENOVO-PC/Users/HODOR/Desktop/Vault/flisz/untitled.txt",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/semiconductor/physics.py",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/hw5/plot.py",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/hw6/hw5.py",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/semiconductor/plot_si_band.py",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/semiconductor/plot.py",
+		"/C/Users/HODOR/.plotly/.credentials",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/hw6/plot.py",
+		"/C/Users/HODOR/Desktop/Vault/Courses/ECE520/semiconductor/hw5.py",
+		"/C/Users/HODOR/Desktop/Vault/ECE520/hw5/plot.py",
+		"/C/Users/HODOR/AppData/Local/Temp/Temp1_nvidia-docker-master.zip/nvidia-docker-master/src/nvidia/devices.go",
+		"/C/Users/HODOR/Desktop/Vault/ECE520/hw5/hw5.py",
+		"/C/Users/HODOR/Desktop/Vault/ECE520/my.py",
+		"/C/Users/HODOR/Desktop/Vault/TA/HW4_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/HW6_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/HW5_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/HW7_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/HW8_rubric.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_troydeleissegues_attempt_2017-02-21-11-20-17.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_tanyalu_attempt_2017-02-21-08-31-50.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_saoudalhamdan_attempt_2017-02-21-13-30-20.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_randallbassine_attempt_2017-02-21-12-23-27.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_nayefalotaibi_attempt_2017-02-21-11-31-26.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_mohammadalenezi_attempt_2017-02-20-21-10-25.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_michaelmann339_attempt_2017-02-21-09-13-19.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_mostaphagouaich_attempt_2017-02-21-17-28-00.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_chrisbair_attempt_2017-02-21-08-36-01.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_jonathanosoba518_attempt_2017-02-21-09-25-21.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_johnherbert_attempt_2017-02-20-22-52-46.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_johnviera_attempt_2017-02-21-13-04-17.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_coltonmyers_attempt_2017-02-21-15-45-18.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_davidvogel_attempt_2017-02-21-15-53-15.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_huyle72_attempt_2017-02-21-16-02-05.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_denverlloyd_attempt_2017-02-20-18-06-04.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_jennmelin_attempt_2017-02-20-12-12-11.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_dereklukasik_attempt_2017-02-21-15-22-57.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_ethanshaefer_attempt_2017-02-21-12-56-15.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_gradyanderson925_attempt_2017-02-21-12-55-45.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_aaronterrell_attempt_2017-02-21-11-56-31.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_budkunz_attempt_2017-02-21-11-11-49.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_caseydehaas_attempt_2017-02-20-20-49-55.txt",
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_abdullahalrashidi340_attempt_2017-02-21-17-21-03.txt"
+	],
+	"find":
+	{
+		"height": 59.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			" *$",
+			"query,answer",
+			" *$",
+			" $",
+			"\\t",
+			"having",
+			"group by",
+			"from",
+			"as",
+			"\\t",
+			"/t",
+			"\\n",
+			"ClassName",
+			"repeat",
+			")\n",
+			"):\n",
+			"During",
+			"Throughout",
+			"dfrac",
+			"texttt",
+			"texttf",
+			"        tickfont=dict(size=12),",
+			"text{",
+			"epsi",
+			"_s",
+			"_v",
+			"_s",
+			"epsilon",
+			"_scalar",
+			"_vector",
+			"epsilon_",
+			"_scalar",
+			"epsilon_",
+			"_vector",
+			"_scalar",
+			"field",
+			"size=10",
+			"nt"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			"query, answer",
+			"",
+			"$",
+			"    ",
+			"HAVING",
+			"GROUP BY",
+			"FROM",
+			"AS",
+			"    ",
+			"  ",
+			" ; ",
+			" ",
+			"\\n#",
+			"Movie",
+			"action",
+			"frac",
+			"text",
+			"texttt",
+			"texttf{",
+			"ep_si",
+			"",
+			"eps",
+			"_s",
+			"_v",
+			"eps_",
+			"_s",
+			"eps_",
+			"_v",
+			"_s",
+			"_SCA",
+			"xSx",
+			"fld",
+			"size=fontsize_yaxis",
+			"pt"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 32.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Python/Python.sublime-build",
+	"project": "restaurant.sublime-project",
+	"replace":
+	{
+		"height": 72.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"abc a a a"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 229.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"last_automatic_layout":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		]
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 178.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
