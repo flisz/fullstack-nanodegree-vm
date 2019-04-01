@@ -32,7 +32,8 @@ def do_session():
 def load_restaurants(restaurants,session):   
     for restaurant in restaurants:        
         restaurant_object = Restaurant(name=restaurant.get("name"))
-        add_to_db(restaurant_object,session)        
+        print("adding restaurant: {}".format(restaurant_object.name))
+        add_to_db(restaurant_object,session)
         menu_items = restaurant.get("menu_items")
         for menu_item in menu_items:
             menu_item_object = get_menu_item_object(menu_item,restaurant_object)
@@ -41,10 +42,18 @@ def load_restaurants(restaurants,session):
 
 def get_restaurants_from_db(session):
     print("getting restaurants")
-    restaurants = session.query(Restaurant)
-    print("\t#:\tNAME:")
-    for count,restaurant in enumerate(restaurants):
-        print('\t{}\t{}'.format(count,restaurant.name))
+    restaurant_objects = session.query(Restaurant)
+    for count, restaurant_object in enumerate(restaurant_objects):
+        print("#:\tRESTAURANT NAME:")
+        print('{}\t{}'.format(count,restaurant_object.name))
+        get_restaurant_menu_from_db(session,restaurant_object)
+
+
+def get_restaurant_menu_from_db(session,restaurant_object):
+    menu_item_objects = session.query(MenuItem).filter(MenuItem.restaurant == restaurant_object)
+    print("\t\t#:\tMENU:")
+    for count, menu_item_object in enumerate(menu_item_objects):
+        print('\t\t{}\t{}'.format(count,menu_item_object.name))
 
 
 def add_to_db(this,session):
@@ -60,7 +69,7 @@ def get_menu_item_object(menu_item,restaurant_object):
         course=menu_item.get("course"),
         restaurant=restaurant_object
         )
-    print("menu_item_object: {}".format(menu_item_object))
+    print("adding menu_item: {}".format(menu_item_object.name))
     return menu_item_object
 
 
