@@ -15,5 +15,6 @@ else:
 	HOST_PORT = HOST + ':' + str(PORT)
 
 DB_NAME = 'restaurant'
-SQL_COMMAND = f'{ENGINE}:///{DB_NAME}'
-print(f'Using SQL_COMMAND: {SQL_COMMAND}')
+POSTGRES_LOGIN = DB_NAME
+SQL_COMMAND = '{}:///{}'.format(ENGINE,POSTGRES_LOGIN)
+print('Using SQL_COMMAND: {}'.format(SQL_COMMAND))
