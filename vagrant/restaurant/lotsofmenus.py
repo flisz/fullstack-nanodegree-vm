@@ -10,7 +10,7 @@ engine = create_engine(SQL_COMMAND)
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine
 
-DBSession = sessionmaker(bind=engine)
+DB = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
 # and represents a "staging zone" for all the objects loaded into the
 # database session object. Any change made against the objects in the
@@ -22,7 +22,7 @@ DBSession = sessionmaker(bind=engine)
 def do_session():
     restaurants = get_restaurants()
     try:
-        session = DBSession()
+        session = DB()
         load_restaurants(restaurants,session)    
         get_restaurants_from_db(session)
     finally:
