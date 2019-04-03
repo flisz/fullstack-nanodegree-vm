@@ -112,6 +112,8 @@ class webserverHandler(BaseHTTPRequestHandler):
         return output
 
     def render_restaurants(self, output):
+    	output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/new'>"
+        output += "<input type = 'submit' value = 'New Restaurant'></form>"
         output += "<table style='width:100%'>"
         output += "<tr>"
         output += "<th>RESTAURANT:</th>"
