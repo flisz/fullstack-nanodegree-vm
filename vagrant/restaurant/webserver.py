@@ -137,7 +137,7 @@ class webserverHandler(BaseHTTPRequestHandler):
 
     def render_restaurant_edit(self, output, path_id):
         stage = DBSessionMaker()
-        print("path_id: {}".format(path_id,type(path_id)))
+        print("path_id: {}, type:{}".format(path_id,type(path_id)))
         restaurants = stage.query(Restaurant).filter(Restaurant.name == path_id)
         for restaurant in restaurants:
             output += "<h4>Edit Restaurant: {}</h4>".format(restaurant.name)
@@ -147,7 +147,7 @@ class webserverHandler(BaseHTTPRequestHandler):
 
     def render_restaurant_delete(self, output, path_id):
         stage = DBSessionMaker()
-        print("path_id: {}".format(path_id,type(path_id)))
+        print("path_id: {}, type:{}".format(path_id,type(path_id)))
         restaurants = stage.query(Restaurant).filter(Restaurant.name == path_id)
         for restaurant in restaurants:
             output += "<h4>Confirm Delete Restaurant: {}</h4>".format(restaurant.name)
