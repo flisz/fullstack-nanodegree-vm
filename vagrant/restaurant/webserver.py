@@ -18,6 +18,7 @@ DBSessionMaker = sessionmaker(bind=engine)
 class webserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
+            self.send_response(200)
             print("GET: {}".format(self.path))
             self.send_output()
         except IOError:
@@ -81,7 +82,6 @@ class webserverHandler(BaseHTTPRequestHandler):
         pass
 
     def send_output(self):
-        self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
         output = self.render_page()
@@ -93,6 +93,7 @@ class webserverHandler(BaseHTTPRequestHandler):
         if self.path == "/restaurants":
             output = self.render_restaurants(output)
         else:
+            sp = None
             sp = self.path.split("/")
             print("path_list:\t{}".format(sp))
             if sp[1] == "restaurants":
@@ -146,9 +147,9 @@ class webserverHandler(BaseHTTPRequestHandler):
         restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Edit Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'POST' enctype='multipart/form-data' action='submit'>".format(restaurant.id)
+            output += "<form method = 'POST' enctype='multipart/form-data' action='edit/submit'>"
             output += "<input type = 'submit' value = 'Submit Edit'></form>"
-            output += "<form method = 'POST' enctype='multipart/form-data' action='back'>".format(restaurant.id)
+            output += "<form method = 'POST' enctype='multipart/form-data' action='edit/back'>"
             output += "<input type = 'submit' value = 'Go Back'></form>"
         return output
 
@@ -158,7 +159,9 @@ class webserverHandler(BaseHTTPRequestHandler):
         restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Confirm Delete Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'POST' enctype='multipart/form-data' action='submit'>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action='delete/submit'>"
+            output += "<input type = 'submit' value = 'Submit Edit'></form>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action='delete/back'>"
             output += "<input type = 'submit' value = 'Confirm Delete'></form>"
         return output
 
