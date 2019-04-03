@@ -85,15 +85,14 @@ class webserverHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
         output = self.render_page()
-        self.wfile.write(output.encode('utf-8'))
-        
+        self.wfile.write(output.encode('utf-8'))	
+                    
     def render_page(self):
         output = ""
         output += "<html><body>"
         if self.path == "/restaurants":
             output = self.render_restaurants(output)
         else:
-            sp = None
             sp = self.path.split("/")
             print("path_list:\t{}".format(sp))
             if sp[1] == "restaurants":
@@ -107,6 +106,9 @@ class webserverHandler(BaseHTTPRequestHandler):
                     elif sp[3] == "delete":
                         output = self.render_restaurant_delete(output, path_id)
                 elif len(sp) > 4:
+                    self.send_response(302)
+                    self.send_header('Location', '/restaurants')
+                    self.end_headers()
                     output = self.render_restaurants(output)
 
         output += "</body></html>"
