@@ -105,6 +105,9 @@ class webserverHandler(BaseHTTPRequestHandler):
                         output = self.render_restaurant_edit(output, path_id)
                     elif sp[3] == "delete":
                         output = self.render_restaurant_delete(output, path_id)
+                elif len(sp) > 4:
+                	output = self.render_restaurants(output)
+
         output += "</body></html>"
         return output
 
@@ -138,21 +141,23 @@ class webserverHandler(BaseHTTPRequestHandler):
     def render_restaurant_edit(self, output, path_id):
         stage = DBSessionMaker()
         print("path_id: {}, type:{}".format(path_id,type(path_id)))
-        restaurants = stage.query(Restaurant).filter(Restaurant.name == path_id)
+        restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Edit Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/{}/edit'>".format(restaurant.id)
-            output += "<input type = 'submit' value = 'Submit_edit'></form>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action='submit'>".format(restaurant.id)
+            output += "<input type = 'submit' value = 'Submit Edit'></form>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action='back'>".format(restaurant.id)
+            output += "<input type = 'submit' value = 'Go Back'></form>"
         return output
 
     def render_restaurant_delete(self, output, path_id):
         stage = DBSessionMaker()
         print("path_id: {}, type:{}".format(path_id,type(path_id)))
-        restaurants = stage.query(Restaurant).filter(Restaurant.name == path_id)
+        restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Confirm Delete Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/{}/delete'>".format(restaurant.id)
-            output += "<input type = 'submit' value = 'submit_delete'></form>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action='submit'>"
+            output += "<input type = 'submit' value = 'Confirm Delete'></form>"
         return output
 
     def render_restaurant_new(self, output):
