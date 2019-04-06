@@ -18,84 +18,90 @@ DBSessionMaker = sessionmaker(bind=engine)
 class webserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
-            print("GET: {}".format(self.path))
-            self.send_output(200)
+            method = "GET"
+            print("{}: {}".format(method, self.path))
+            self.send_output(200, method)
         except IOError:
             self.send_error(404, "File Not Found: {}".format(self.path))
 
     def do_POST(self):
         try:
-            print("POST: {}".format(self.path))
+            method = "POST"
+            print("{}: {}".format(method, self.path))
             ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
-            print(ctype)
-            print(pdict)
+            print("ctype:\t{}".format(ctype))
+            print("pdict:\t{}".format(pdict))
             if pdict.get('boundary') is not None:
                 pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
             if ctype == 'multipart/form-data':
                 fields = cgi.parse_multipart(self.rfile, pdict)
-                messagecontent = fields.get('message') 
-            self.send_output(201)
-        except IOError:
-            self.send_error(404, "File Not Found: {}".format(self.path))
-
-    def restaurant_add(self):
-        pass
-
-    def do_PUT(self):
-        try:
-            print("PUT: {}".format(self.path))
-            ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
-            print(ctype)
-            print(pdict)
-            if pdict.get('boundary') is not None:
-                pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
-            if ctype == 'multipart/form-data':
-                fields = cgi.parse_multipart(self.rfile, pdict)
-                messagecontent = fields.get('message') 
-            self.send_output(202)
-        except IOError:
-            self.send_error(404, "File Not Found: {}".format(self.path))
-
-    def restaurant_edit(self):
-        pass
-
-    def do_DELETE(self):
-        try:
-            print("DELETE: {}".format(self.path))
-            ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
-            print(ctype)
-            print(pdict)
-            if pdict.get('boundary') is not None:
-                pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
-            if ctype == 'multipart/form-data':
-                fields = cgi.parse_multipart(self.rfile, pdict)
-                messagecontent = fields.get('message') 
-            self.send_output(202)
+                print("fields:\t{}".format(fields))
+                if self.path.endswith('/delete?'):
+                    self.restaurant_delete()
+                elif self.path.endswith('/new?') and fields.get('restaurant_create_name'):
+                    restaurant_create_name = fields.get('restaurant_create_name')[0].decode()
+                    self.restaurant_create(restaurant_create_name)
+                elif self.path.endswith('/edit?') and fields.get('restaurant_update_name'):
+                    restaurant_update_name = fields.get('restaurant_update_name')[0].decode()
+                    self.restaurant_update(restaurant_update_name)
+            self.send_output(201, method)
         except IOError:
             self.send_error(404, "File Not Found: {}".format(self.path))
 
     def restaurant_delete(self):
-        pass
+        sp = self.path.split("/")
+        if len(sp) > 3:
+            path_id = sp[2]
+            stage = DBSessionMaker()
+            restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
+            for restaurant in restaurants:
+                menu_items = stage.query(MenuItem).filter(MenuItem.restaurant == restaurant)
+                for menu_item in menu_items:
+                    print("DELETING:\t{}".format(menu_item.name))
+                    stage.delete(menu_item)
+                print("DELETING:\t{}".format(restaurant.name))
+                stage.delete(restaurant)
+            stage.commit()
 
-    def send_output(self,response):
-        output = self.render_page()
+    def restaurant_update(self, name):
+        print("UPDATING: {}".format(name))
+        sp = self.path.split("/")
+        if len(sp) > 3:
+            path_id = sp[2]
+            stage = DBSessionMaker()
+            restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
+            for restaurant in restaurants:
+                print("UPDATING: {} TO: {}".format(restaurant.name,name))
+                restaurant.name = name
+            stage.commit()
+
+    def restaurant_create(self, name):
+        print("CREATE: {}".format(name))
+        restaurant = Restaurant()
+        restaurant.name = name
+        stage = DBSessionMaker()
+        stage.add(restaurant)
+        stage.commit()
+
+    def send_output(self,response,method):
+        output = self.render_page(method)
         if output != '':
             self.send_response(response)
             self.send_header('Content-type','text/html')
             self.end_headers()
             self.wfile.write(output.encode('utf-8')) 
                     
-    def render_page(self):
+    def render_page(self, method):
         output = ""
         sp = self.path.split("/")
         print("path_list:\t{}".format(sp))
-        if sp[-1] == '' or '?' in self.path:
+        if sp[-1] == '' or method == "POST" or self.path.endswith("?back=Back"):
             self.send_response(303)
-            if '?' in self.path:
+            if self.path.endswith("?back=Back") or method == "POST":
                 self.send_header('Location', '/restaurants')
             if sp[-1] == '':
-            	path = '/'.join(sp[:-1])
-            	self.send_header('Location', '{}'.format(path))
+                path = '/'.join(sp[:-1])
+                self.send_header('Location', '{}'.format(path))
             self.end_headers()
             return output
         output += "<html><body>"
@@ -104,20 +110,20 @@ class webserverHandler(BaseHTTPRequestHandler):
         else:
             if sp[1] == "restaurants":
                 if len(sp) == 3:
-                    if sp[2] == "new":
+                    if sp[2] == "new?":
                         output = self.render_restaurant_new(output)
                 elif len(sp) == 4:
                     path_id = sp[2]
-                    if sp[3] == "edit":
+                    if sp[3] == "edit?":
                         output = self.render_restaurant_edit(output, path_id)
-                    elif sp[3] == "delete":
+                    elif sp[3] == "delete?":
                         output = self.render_restaurant_delete(output, path_id)
         output += "</body></html>"
         return output
 
     def render_restaurants(self, output):
-        output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/new'>"
-        output += "<input type = 'submit' value = 'New Restaurant'></form>"
+        output += "<form method = 'GET' enctype='multipart/form-data' action='restaurants/new'>"
+        output += "<input type = 'submit' value = 'Create New Restaurant'></form>"
         output += "<table style='width:100%'>"
         output += "<tr>"
         output += "<th>RESTAURANT:</th>"
@@ -133,12 +139,12 @@ class webserverHandler(BaseHTTPRequestHandler):
                 output += "<td>{}</td>".format(restaurant.id)
                 #edit button
                 output += "<td>"
-                output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/{}/edit'>".format(restaurant.id)
+                output += "<form method = 'GET' enctype='multipart/form-data' action='restaurants/{}/edit'>".format(restaurant.id)
                 output += "<input type = 'submit' value = 'Edit'></form>"
                 output += "</td>"
                 #delete button
                 output +="<td>"
-                output += "<form method = 'POST' enctype='multipart/form-data' action='restaurants/{}/delete'>".format(restaurant.id)
+                output += "<form method = 'GET' enctype='multipart/form-data' action='restaurants/{}/delete'>".format(restaurant.id)
                 output += "<input type = 'submit' value = 'Delete'></form>"
                 output += "</td>"
                 output += "</tr>"
@@ -150,8 +156,8 @@ class webserverHandler(BaseHTTPRequestHandler):
         restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Edit Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
-            output += "<input type='text' name='new_name'>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action=''>"
+            output += "<input type='text' name='restaurant_update_name'>"
             output += "<input type = 'submit' name = 'accept' value = 'Submit'></form>"
             output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
             output += "<input type = 'submit' name = 'back' value = 'Back'></form>"
@@ -163,7 +169,7 @@ class webserverHandler(BaseHTTPRequestHandler):
         restaurants = stage.query(Restaurant).filter(Restaurant.id == path_id)
         for restaurant in restaurants:
             output += "<h4>Confirm Delete Restaurant: {}</h4>".format(restaurant.name)
-            output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
+            output += "<form method = 'POST' enctype='multipart/form-data' action=''>"
             output += "<input type = 'submit' name = 'accept' value = 'Confirm'></form>"
             output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
             output += "<input type = 'submit' name = 'back' value = 'Back'></form>"
@@ -171,8 +177,8 @@ class webserverHandler(BaseHTTPRequestHandler):
 
     def render_restaurant_new(self, output):
         output += "<h4>New Restaurant:</h4>"
-        output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
-        output += "<input type='text' name='new_restaurant'>"
+        output += "<form method = 'POST' enctype='multipart/form-data' action=''>"
+        output += "<input type='text' name='restaurant_create_name'>"
         output += "<input type = 'submit' name = 'new' value = 'New'></form>"
         output += "<form method = 'GET' enctype='multipart/form-data' action=''>"
         output += "<input type = 'submit' name = 'back' value = 'Back'></form>"
