@@ -1,11 +1,11 @@
 from flask import Flask
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/hello')
+
+@app.route('/', methods=['GET'])
+@app.route('/hello', methods=['GET'])
 def HelloWorld():
-	return "Hello World"
+    return "Hello World"
 
 if __name__ == '__main__':
-	app.debug = True
-	app.run(host = '0.0.0.0', port = 8080)
+    app.run(host='0.0.0.0', port=5000)
