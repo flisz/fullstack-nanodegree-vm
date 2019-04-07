@@ -23,43 +23,43 @@ def restaurants():
     table_object = Restaurant
     subtable_objects = MenuItem
     output += html_table_with_subtables(output, 
-								    	table_object=table_object, 
-								    	subtable_objects=subtable_objects)
+                                        table_object=table_object, 
+                                        subtable_objects=subtable_objects)
     return output
 
 
-def html_table_with_subtables(output, table_object = None, subtable_objects = None, next_function = None)
-	addition += html_table(output, table_object=table_object, subtable_objects=subtable_objects, next_function=html_subtables)
-	# todo: log additions
-	output += addition
-	return output
+def html_table_with_subtables(output, table_object = None, subtable_objects = None, next_function = None):
+    addition += html_table(output, table_object=table_object, subtable_objects=subtable_objects, next_function=html_subtables)
+    # todo: log additions
+    output += addition
+    return output
 
 
 def html_subtables(output, subtable_objects = None, next_function = None):
-	if subtable_objects:
-		for subtable in subtable_objects:
-			output += html_table(output, table_object = subtable, next_function = None):
-	# todo: log messages
-	return output
+    if subtable_objects:
+        for subtable in subtable_objects:
+            output += html_table(output, table_object = subtable, next_function = None)
+    # todo: log messages
+    return output
 
 
 def html_table(output, table_object = None, next_function = None):
-	items = session.query(table_object)
-	item_headers = items.column_descriptions
-	for header in item_headers:
-		output += "<th>{}</th>".format(header)
-	for item in items:
-		# todo: generalize 
-    	for column in items.__table__.columns.keys()
-			column_data = getattr(item, header)
-			output += "<td>{}</td>".format(column_data)
-    	output += "</table>"
-    	output += "<br>"
-    	if next_function:
-    		# todo: log messages
-    		return next_function(output, args*, kwargs**)
-	# todo: log messages
-	return output
+    items = session.query(table_object)
+    item_headers = items.column_descriptions
+    for header in item_headers:
+        output += "<th>{}</th>".format(header)
+    for item in items:
+        # todo: generalize 
+        for column in items.__table__.columns.keys():
+            column_data = getattr(item, header)
+            output += "<td>{}</td>".format(column_data)
+        output += "</table>"
+        output += "<br>"
+        if next_function:
+            # todo: log messages
+            return next_function(output, args*, kwargs**)
+    # todo: log messages
+    return output
 
 
 if __name__ == '__main__':
