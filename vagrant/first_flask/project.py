@@ -57,7 +57,7 @@ def html_table(output, table_object = None, next_function = None):
         output += "<br>"
         if next_function:
             # todo: log messages
-            return next_function(output, args=args*, kwargs=kwargs**)
+            return next_function(output, args=*args, kwargs=**kwargs)
     # todo: log messages
     return output
 
