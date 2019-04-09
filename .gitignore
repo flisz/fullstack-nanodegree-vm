@@ -1,4 +1,5 @@
 **/*.db
 **/*.sql
 **/*.pyc
-**/*.sublime-workspace
+**/**/**/*.sublime-workspace
+*.sublime-workspace

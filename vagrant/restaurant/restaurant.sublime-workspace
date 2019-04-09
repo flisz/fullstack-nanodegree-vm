@@ -4,6 +4,74 @@
 		"selected_items":
 		[
 			[
+				"menu",
+				"menu_item"
+			],
+			[
+				"res",
+				"restaurant"
+			],
+			[
+				"rest",
+				"restaurant"
+			],
+			[
+				"restau",
+				"restaurant"
+			],
+			[
+				"send",
+				"send_response"
+			],
+			[
+				"new",
+				"new"
+			],
+			[
+				"send_",
+				"send_output"
+			],
+			[
+				"rse",
+				"restaurant_object"
+			],
+			[
+				"menu_item_ob",
+				"menu_item_object"
+			],
+			[
+				"rst",
+				"restaurant_object"
+			],
+			[
+				"resta",
+				"restaurant"
+			],
+			[
+				"get",
+				"get_restaurants"
+			],
+			[
+				"restaur",
+				"restaurants"
+			],
+			[
+				"men",
+				"menu_items"
+			],
+			[
+				"meni",
+				"menu_items"
+			],
+			[
+				"re",
+				"restaurant"
+			],
+			[
+				"meu",
+				"menu_item_object"
+			],
+			[
 				"USER",
 				"USER_PASSWORD"
 			],
@@ -111,7 +179,8 @@
 			"file": "webserver.py",
 			"settings":
 			{
-				"buffer_size": 2561,
+				"buffer_size": 8869,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
@@ -125,38 +194,19 @@
 			}
 		},
 		{
-			"file": "config.py",
-			"settings":
-			{
-				"buffer_size": 357,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forumdb.py",
-			"settings":
-			{
-				"buffer_size": 999,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "#!/usr/bin/env python3\n# \n# A buggy web service in need of a database.\n\nfrom flask import Flask, request, redirect, url_for\n\nfrom forumdb import get_posts, add_post\n\napp = Flask(__name__)\n\n# HTML template for the forum page\nHTML_WRAP = '''\\\n<!DOCTYPE html>\n<html>\n  <head>\n    <title>DB Forum</title>\n    <style>\n      h1, form { text-align: center; }\n      textarea { width: 400px; height: 100px; }\n      div.post { border: 1px solid #999;\n                 padding: 10px 10px;\n                 margin: 10px 20%%; }\n      hr.postbound { width: 50%%; }\n      em.date { color: #999 }\n    </style>\n  </head>\n  <body>\n    <h1>DB Forum</h1>\n    <form method=post>\n      <div><textarea id=\"content\" name=\"content\"></textarea></div>\n      <div><button id=\"go\" type=\"submit\">Post message</button></div>\n    </form>\n    <!-- post content will go here -->\n    %s\n  </body>\n</html>\n'''\n\n# HTML template for an individual comment\nPOST = '''\\\n    <div class=post><em class=date>%s</em><br>%s</div>\n'''\n\n\n@app.route('/', methods=['GET'])\ndef main():\n  '''Main page of the forum.'''\n  posts = \"\".join(POST % (date, text) for text, date in get_posts())\n  html = HTML_WRAP % posts\n  return html\n\n\n@app.route('/', methods=['POST'])\ndef post():\n  '''New post submission.'''\n  message = request.form['content']\n  add_post(message)\n  return redirect(url_for('main'))\n\n\nif __name__ == '__main__':\n  app.run(host='0.0.0.0', port=8000)\n\n",
-			"file": "/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forum.py",
-			"file_size": 1472,
-			"file_write_time": 131949431007166458,
-			"settings":
-			{
-				"buffer_size": 1413,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "lotsofmenus.py",
 			"settings":
 			{
-				"buffer_size": 14479,
+				"buffer_size": 13294,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/first_flask/project.py",
+			"settings":
+			{
+				"buffer_size": 210,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -217,10 +267,18 @@
 	},
 	"expanded_folders":
 	[
-		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/restaurant"
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/restaurant"
 	],
 	"file_history":
 	[
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/1st_flask/project.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/restaurant/db.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/restaurant/config.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/restaurant/lotsofmenus.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forum.py",
+		"/F/vault/flisz/Courses/udacity/fsnd/2019/courses/http/my_bookmark_server/BookmarkServer.py",
+		"/C/Users/HODOR/AppData/Roaming/Sublime Text 3/Packages/Python Breakpoints/PythonBreakpoints.sublime-settings",
+		"/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forumdb.py",
 		"/C/Users/HODOR/.config/git/gitk",
 		"/C/Users/HODOR/mycert.pem",
 		"/C/Users/HODOR/mykey.key",
@@ -340,19 +398,11 @@
 		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_saoudalhamdan_attempt_2017-02-21-13-30-20.txt",
 		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_randallbassine_attempt_2017-02-21-12-23-27.txt",
 		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_nayefalotaibi_attempt_2017-02-21-11-31-26.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_mohammadalenezi_attempt_2017-02-20-21-10-25.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_michaelmann339_attempt_2017-02-21-09-13-19.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_mostaphagouaich_attempt_2017-02-21-17-28-00.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_chrisbair_attempt_2017-02-21-08-36-01.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_jonathanosoba518_attempt_2017-02-21-09-25-21.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_johnherbert_attempt_2017-02-20-22-52-46.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_johnviera_attempt_2017-02-21-13-04-17.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_coltonmyers_attempt_2017-02-21-15-45-18.txt",
-		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_davidvogel_attempt_2017-02-21-15-53-15.txt"
+		"/C/Users/HODOR/Desktop/Vault/TA/gradebook_1173-11119ECE212001_HW06_2017-03-14-19-10-29/HW06_mohammadalenezi_attempt_2017-02-20-21-10-25.txt"
 	],
 	"find":
 	{
-		"height": 59.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -366,6 +416,50 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"true",
+			"restarant",
+			"\\t",
+			"db.",
+			"item\\[",
+			"item[",
+			"\\n    \\[",
+			"\\n    [",
+			"        ",
+			"\\t",
+			"       ",
+			"\\(,",
+			"\\\\\"",
+			"\\)\\n\\W",
+			"},\\n{2,}\\n\\W*{",
+			"},\\n\\t{",
+			"menuItem[0-9] = {",
+			"\t\"name",
+			"{\\n\\n",
+			"},\n       {",
+			"{\\n\\n",
+			"},\\n\\t{",
+			"},\\n\\W+{",
+			"       {\"name\":",
+			"^\\t{\"name\"",
+			"^\"price",
+			"^\"name",
+			"\", \"",
+			"                     price",
+			"}\\n",
+			"\"\\) menuItem1 = ",
+			"restaurant[0-9] = Restaurant\\(name",
+			"restaurant[0-9]+ = Restaurant\\(name",
+			"restaurant[0-9] = Restaurant\\(name",
+			"\\n+menu",
+			"session.add\\(.*\\)\nsession.commit\\(\\)",
+			"session.add(.*)\nsession.commit()",
+			"\nsession.add(menuItem2)\nsession.commit()\n",
+			"\"name\"",
+			", \"restaurant.*",
+			"=\"",
+			"=",
+			"MenuItem\\(name",
+			", ",
 			" *$",
 			"query,answer",
 			" *$",
@@ -411,6 +505,49 @@
 		"regex": true,
 		"replace_history":
 		[
+			"restaurant",
+			"    ",
+			"stage.",
+			"item.get(",
+			"[",
+			"",
+			"        ",
+			"    ",
+			")",
+			"",
+			",\\n\"menu_items\": [",
+			"\\n\\t}]\\n},{\\n",
+			"\\n\\t},{",
+			"\\t{\\n\\t",
+			"\"name",
+			"{\\n",
+			"\\n\\t},{\\n",
+			"{\\n",
+			"\\n\\t},{\\n",
+			"\\n},{\\n",
+			"       {\\n\\t\"name\":",
+			"\\t{\\n\\t\"name\"",
+			"{\\n\\t\"name\"",
+			"{\\n\"name\"",
+			"\\t\"price",
+			"\\t{\"name",
+			"\",\\n\\t\"",
+			"\",\\n\"",
+			"\"price",
+			"},\\n",
+			"\",\\n\"menu_items\": [\\n",
+			"\",\\n\",\"menu_items\": [\\n",
+			",\\n {\"name",
+			", {\"name",
+			"[{\"name",
+			"\\nmenu",
+			"",
+			"{\"name\"",
+			"}",
+			"\": \"",
+			"\": ",
+			"\"name",
+			", \"",
 			"",
 			"query, answer",
 			"",
@@ -456,7 +593,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -465,27 +602,30 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2561,
+						"buffer_size": 8869,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3425,
+								3425
 							]
 						],
 						"settings":
 						{
+							"SL.27.region_keys":
+							[
+							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2066.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -501,70 +641,17 @@
 						"selection":
 						[
 							[
-								238,
-								238
+								769,
+								734
 							]
 						],
 						"settings":
 						{
+							"SL.28.region_keys":
+							[
+							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "config.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 357,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								357,
-								357
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forumdb.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 999,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -574,63 +661,67 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "/F/vault/flisz/Courses/udacity/fsnd/vm/fullstack/vagrant/forum/forum.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1413,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								850,
-								850
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 342.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
+					"buffer": 2,
 					"file": "lotsofmenus.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14479,
+						"buffer_size": 13294,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2563,
+								2563
 							]
 						],
 						"settings":
 						{
+							"SL.40.region_keys":
+							[
+							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 7,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 819.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/F/vault/flisz/Courses/udacity/fsnd/2019/vm/git-fullstack/vagrant/first_flask/project.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 210,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								208,
+								208
+							]
+						],
+						"settings":
+						{
+							"SL.42.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -638,7 +729,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 31.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -667,6 +758,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
 	"output.exec":
 	{
 		"height": 35.0
@@ -679,7 +774,7 @@
 	"project": "restaurant.sublime-project",
 	"replace":
 	{
-		"height": 72.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":

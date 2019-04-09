@@ -78,7 +78,7 @@ class webserverHandler(BaseHTTPRequestHandler):
     def restaurant_create(self, name):
         print("CREATE: {}".format(name))
         restaurant = Restaurant()
-        restaurant.name = name
+        restaurant.name = namem
         stage = DBSessionMaker()
         stage.add(restaurant)
         stage.commit()
