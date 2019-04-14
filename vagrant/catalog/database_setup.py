@@ -11,22 +11,19 @@ from config import SQL_COMMAND
 Base = declarative_base()
 
 
-class Restaurant(Base):
+class Category(Base):
 	__tablename__ = 'restaurant'
 	name = Column(String(80), nullable=False)
 	id = Column(Integer, primary_key=True)
 
 
-class MenuItem(Base):
+class Item(Base):
 	__tablename__ = 'menu_item'
 	name = Column(String(80),nullable=False)
 	id = Column(Integer, primary_key=True)
-	course = Column(String(250))
 	description = Column(String(250))
-	price = Column(String(8))
-	restaurant_id = Column( Integer, ForeignKey('restaurant.id'))
-	restaurant = relationship(Restaurant)
-
+	category_id = Column( Integer, ForeignKey('category_id.id'))
+	category = relationship(Category)
 
 engine = create_engine(SQL_COMMAND)
 
