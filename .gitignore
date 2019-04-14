@@ -2,4 +2,5 @@
 **/*.sql
 **/*.pyc
 **/**/**/*.sublime-workspace
+vagrant/boot/**
 *.sublime-workspace
