@@ -28,3 +28,8 @@ class Item(Base):
 
 engine = create_engine(SQL_COMMAND)
 Base.metadata.create_all(engine)
+
+def get_db():
+    return create_engine(SQL_COMMAND)
+engine = create_engine(SQL_COMMAND)
+Base.metadata.create_all(engine)
