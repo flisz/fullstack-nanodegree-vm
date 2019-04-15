@@ -3,4 +3,5 @@
 .vagrant
 **/*.sublime-project
 **/.idea/**
+**/venv/**
 vagrant/boot/**

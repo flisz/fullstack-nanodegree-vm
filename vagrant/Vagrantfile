@@ -33,18 +33,17 @@ Vagrant.configure("2") do |config|
     pip2 install flask packaging oauth2client redis passlib flask-httpauth
     pip2 install sqlalchemy flask-sqlalchemy psycopg2-binary bleach requests
 
-    su postgres -c 'createuser -dRS vagrant > /vagrant/boot/provisioning_createuser 2>&1'
-    su vagrant -c 'createdb  >> /vagrant/boot/provisioning_createdb.txt 2>&1'
-    su vagrant -c 'createdb news >> /vagrant/boot/provisioning_createdb.txt 2>&1'
-    su vagrant -c 'createdb forum >> /vagrant/boot/provisioning_createdb.txt 2>&1'
-    su vagrant -c 'createdb restaurant >> /vagrant/boot/provisioning_createdb.txt 2>&1'
-    su vagrant -c 'createdb catalog  >> /vagrant/boot/provisioning_createdb.txt 2>&1'
-    su vagrant -c 'psql -l >> /vagrant/boot/provisioning_createdb.txt 2>&1'
+    su postgres -c 'createuser -dRS vagrant > /vagrant/boot/log/provisioning_createuser.txt 2>&1'
+    su vagrant -c 'createdb  >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
+    su vagrant -c 'createdb news >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
+    su vagrant -c 'createdb forum >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
+    su vagrant -c 'createdb restaurant >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
+    su vagrant -c 'createdb catalog  >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
+    su vagrant -c 'psql -l >> /vagrant/boot/log/provisioning_createdb.txt 2>&1'
     
     su vagrant -c 'pg_dump catalog > /vagrant/boot/back-up/catalog.sql 2> /vagrant/boot/log/provisioning_pg_dump.txt'
     su vagrant -c 'pg_dump -Ft catalog > /vagrant/boot/back-up/catalog.tar 2> /vagrant/boot/log/provisioning_pg_dump.txt'
-    su vagrant -c 'pg_restore -Ft /vagrant/boot/back-up/catalog.tar > /vagrant/boot/provisioning_pg_restore.txt 2>&1'
-
+    su vagrant -c 'pg_restore -Ft /vagrant/boot/back-up/catalog.tar > /vagrant/boot/log/provisioning_pg_restore.txt 2>&1'
 
     vagrantTip="[35m[1mThe shared directory is located at /vagrant\\nTo access your shared files: cd /vagrant[m"
     echo -e $vagrantTip > /etc/motd
