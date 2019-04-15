@@ -18,8 +18,8 @@ def add_category(data, commit=True, session=None):
     required = dict()
     required["name"] = data.get("name")
     print("CREATING:\tcategory\n\tinput_data:\t{}".format(data))
-    if any([requirement is None for requirement in required.items()]):
-        print('insufficient required data provided!\n\trequired_data:\t{}'.format(required))
+    if any([requirement is None for requirement in required.values()]):
+        print('required info not provided: {}'.format(required.keys()))
     else:
         category = Category()
         category.name = data['name']
@@ -34,10 +34,32 @@ def get_all_categories(session=None):
     return session.query(Category)
 
 
+def get_category_and_items(data, session=None):
+    if session is None:
+        session = get_session()
+    required = dict()
+    required['category_id'] = data.get('category_id')
+    if any([requirement is None for requirement in required.values()]):
+        print('required info not provided: {}'.format(required.keys()))
+    else:
+        categories = get_categories_where(required, session=session)
+        for category in categories:  # should be only one entry!
+            category_items = get_category_items(category, session=session)
+            return category, category_items
+
+
+def get_category_items(category, session=None):
+    if session is None:
+        session = get_session()
+    print("GETTING:\t{}.category_items".format(category))
+    return session.query(Item).filter(Item.Category == category)
+
+
 def get_categories_where(data, session=None):
     if session is None:
         session = get_session()
     print("GETTING:\tcategory:\n\twith criteria:{}".format(data))
+    # Filter By Criteria:
     criteria = dict()
     criteria["name"] = data.get("name")
     criteria["category_id"] = data.get("category_id")
@@ -55,16 +77,21 @@ def get_categories_where(data, session=None):
 def update_category(data, commit=True, session=None):
     if session is None:
         session = get_session()
+    # Requirements:
     required = dict()
     required["category_id"] = data.get("category_id")
+    # Update Information:
     update = dict()
     update["name"] = data.get("name")
-    print("DOING_UPDATE:\tcategory\n\tinput_data:\t{}".format(data))
-    categories = get_categories_where(required, session=session)
-    for category in categories:
-        category.name = update["name"]
-    if commit is True:
-        session.commit()
+    print("UPDATING:\tcategory\n\tinput_data:\t{}".format(data))
+    if any([requirement is None for requirement in required.values()]):
+        print('required info not provided: {}'.format(required.keys()))
+    else:
+        categories = get_categories_where(required, session=session)
+        for category in categories:
+            category.name = update["name"]
+        if commit is True:
+            session.commit()
 
 
 def delete_category(category, commit=False, session=None):
@@ -81,27 +108,44 @@ def delete_category(category, commit=False, session=None):
         session.commit()
 
 
-def get_category_items(category, session=None):
-    if session is None:
-        session = get_session()
-    print("GETTING:\t{}.category_items".format(category))
-    return session.query(Item).filter(Item.Category == category)
-
-
 def delete_categories_where(data, commit=True, session=None):
     if session is None:
         session = get_session()
     categories = get_categories_where(data, session=session)
     for category in categories:
-        delete_category(category ,session=session)
+        delete_category(category, session=session)
     if commit is True:
         session.commit()
 
 
+def add_item(data, commit=True, session=None):
+    if session is None:
+        session = get_session()
+    required = dict()
+    required["name"] = data.get("name")
+    required["category_id"] = data.get("category_id")
+    optional = dict()
+    optional["description"] = data.get("description")
+    print("CREATING:\titem\n\tinput_data:\t{}".format(data))
+    if any([requirement is None for requirement in required.values()]):
+        print('required info not provided: {}'.format(required.keys()))
+    else:
+        item = Item()
+        item.name = required['name']
+        item.category_id = required['category_id']
+        if optional['description'] is not None:
+            item.description = optional['description']
+        session.add(item)
+        if commit is True:
+            session.commit()
 
 
+def get_all_items():
+def get_item():
+    def get_item_where():
 
 
-    return create_engine(SQL_COMMAND)
-engine = create_engine(SQL_COMMAND)
-Base.metadata.create_all(engine)
+def update_item():
+
+
+def delete_item():
