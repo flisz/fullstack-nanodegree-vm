@@ -45,6 +45,7 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
+        # todo: convert to sqlalchemy
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
