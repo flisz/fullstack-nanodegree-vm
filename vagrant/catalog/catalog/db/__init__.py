@@ -205,8 +205,6 @@ def update_item(data, commit=True, session=None):
         session = get_session()
     required = dict()
     required['item_id'] = data.get('item_id')
-    
-
 
 
 def delete_item(item, commit=False, session=None):

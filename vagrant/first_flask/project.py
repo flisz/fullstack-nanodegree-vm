@@ -13,44 +13,172 @@ Base.metadata.bind = engine
 DBSessionMaker = sessionmaker(bind=engine)
 session = DBSessionMaker()
 
+
 @app.route('/', methods=['GET'])
-@app.route('/restaurants', methods=['GET'])
+@app.route('/restaurant', methods=['GET'])
 def restaurants():
     restaurants = session.query(Restaurant)
-    restaurants_headers = restaurants.column_descriptions
-    # Main Table:
-    output = html_restaurants()
+    output = site_restaurant()    
     return output
 
-def html_restaurants():
-    restaurants = session.query(Restaurant)
-    restaurant_headers = Restaurant.__table__.columns.keys()
-    output = ''
+
+@app.route('/restaurant/<int:restaurant_id>/')
+def restaurant(restaurant_id):
+    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+    output = site_restaurants_with_menu_items(restaurants)
+    return output
+
+
+
+
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/')
+def menu_item(restaurant_id, menu_item_id):
+    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+    output = site_restaurants_with_menu_items(restaurants)
+    return output
+
+
+def site_restaurant(output=None, 
+                    restaurants = None, restaurant_headers = None, restaurant_id = None):
+    if output is None: 
+        output = ''
+    if restaurant_id is not None:
+        restaurants = session.query(Restaurant).(Restaurant.id == restaurant_id)
+    if restaurants is None:
+        restaurants = session.query(Restaurant)
     for restaurant in restaurants:
-        # todo: generalize 
-        
-        print("restaurant_headers: {}".format(restaurant_headers))
-        output += "<table>"
-        output += "<tr>"
-        for header in restaurant_headers:
-            output += "<th>{}</th>".format(header)
-        output += "</tr>"
-        output += "<tr>"
-        for header in restaurant_headers:
-            column_data = getattr(restaurant, header)
-            output += "<td>{}</td>".format(column_data)
-        output += "</tr>"
-        output += "</table>"
-        output += "<br>"
-        addition = html_menu_items(restaurant)
-        output += addition
-                
-    # todo: log messages
+        add_restaurant = html_restaurant(restaurant, restaurant_headers = restaurant_headers)
+        output += add_restaurant        
     return output
 
-def html_menu_items(restaurant):
-    menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
-    item_headers = MenuItem.__table__.columns.keys()
+
+def site_restaurants_with_menu_items(output=None, 
+                                     restaurants = None, restaurant_headers = None, restaurant_id = None,  
+                                     menu_items = None, menu_item_headers = None, menu_item_id = None):
+    if output is None: 
+        output = ''
+    if menu_item_id is None:
+        if restaurant_id is not None:
+            restaurants = session.query(Restaurant).(Restaurant.id == restaurant_id)
+        if restaurants is None:
+            restaurants = session.query(Restaurant)
+        for restaurant in restaurants:
+            # todo: generalize 
+            add_restaurant = html_table_restaurant(restaurant, restaurant_headers = restaurant_headers)
+            menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items        
+    else:  # if menu_item_id is not None: 
+        menu_items = session.query(MenuItem).(MenuItem.id == menu_item_id)
+        if restaurant_id is None or menu_item.restaurant_id == restaurant_id:
+            restaurants = session.query(Restaurant).(Restaurant.id == menu_item.restaurant_id)
+        else:  # restaurant_id is not None
+            raise ValueError("resturant_id:{} and menu_item.resturant_id:{} do not match")
+        for restaurant in restaurants:
+            output += "<h2>{}: (#{})<h2>".format(restaurant.name, restaurant.id)
+            add_restaurant = html_table_restaurant(restaurants = restaurant, restaurant_headers = restaurant_headers)
+            output += "<h2>Menu:<h2>"
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_items = menu_items, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items         
+    return output
+
+def site_restaurants_with_menu_items(output=None, 
+                                     restaurants = None, restaurant_headers = None, restaurant_id = None,  
+                                     menu_items = None, menu_item_headers = None, menu_item_id = None):
+    if output is None: 
+        output = ''
+    if menu_item_id is None:
+        if restaurant_id is not None:
+            restaurants = session.query(Restaurant).(Restaurant.id == restaurant_id)
+        if restaurants is None:
+            restaurants = session.query(Restaurant)
+        for restaurant in restaurants:
+            # todo: generalize 
+            add_restaurant = html_table_restaurant(restaurant, restaurant_headers = restaurant_headers)
+            menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items        
+    else:  # if menu_item_id is not None: 
+        menu_items = session.query(MenuItem).(MenuItem.id == menu_item_id)
+        if restaurant_id is None or menu_item.restaurant_id == restaurant_id:
+            restaurants = session.query(Restaurant).(Restaurant.id == menu_item.restaurant_id)
+        else:  # restaurant_id is not None
+            raise ValueError("resturant_id:{} and menu_item.resturant_id:{} do not match")
+        for restaurant in restaurants:
+            output += "<h2>{}: (#{})<h2>".format(restaurant.name, restaurant.id)
+            add_restaurant = html_table_restaurant(restaurants = restaurant, restaurant_headers = restaurant_headers)
+            output += "<h2>Menu:<h2>"
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_items = menu_items, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items         
+    return output
+
+def site_restaurants_with_menu_items(output=None, 
+                                     restaurants = None, restaurant_headers = None, restaurant_id = None,  
+                                     menu_items = None, menu_item_headers = None, menu_item_id = None):
+    if output is None: 
+        output = ''
+    if menu_item_id is None:
+        if restaurant_id is not None:
+            restaurants = session.query(Restaurant).(Restaurant.id == restaurant_id)
+        if restaurants is None:
+            restaurants = session.query(Restaurant)
+        for restaurant in restaurants:
+            # todo: generalize 
+            add_restaurant = html_table_restaurant(restaurant, restaurant_headers = restaurant_headers)
+            menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items        
+    else:  # if menu_item_id is not None: 
+        menu_items = session.query(MenuItem).(MenuItem.id == menu_item_id)
+        if restaurant_id is None or menu_item.restaurant_id == restaurant_id:
+            restaurants = session.query(Restaurant).(Restaurant.id == menu_item.restaurant_id)
+        else:  # restaurant_id is not None
+            raise ValueError("resturant_id:{} and menu_item.resturant_id:{} do not match")
+        for restaurant in restaurants:
+            add_restaurant = html_table_restaurant(restaurants = restaurant, restaurant_headers = restaurant_headers)
+            add_menu_items = html_table_menu_items(restaurants = restaurant, menu_items = menu_items, menu_item_headers = menu_item_headers)
+            output += add_restaurant + add_menu_items         
+    return output
+
+
+def html_table_restaurant(output = None, 
+                          restaurants = None, restaurant_headers = None)
+    if output is None: 
+        output = ''
+    if restaurants is None:
+        restaurants = session.query(Restaurant)
+    if restaurant_headers is None:
+        restaurant_headers = Restaurant.__table__.columns.keys()
+
+    print("restaurant_headers: {}".format(restaurant_headers))
+    output += "<table>"
+    output += "<tr>"
+    for header in restaurant_headers:
+        output += "<th>{}</th>".format(header)
+    output += "</tr>"
+    output += "<tr>"
+    for header in restaurant_headers:
+        column_data = getattr(restaurant, header)
+        output += "<td>{}</td>".format(column_data)
+    output += "</tr>"
+    output += "</table>"
+    output += "<br>"
+    return output
+
+
+def html_table_menu_items(output = None, 
+                          restaurants = None, 
+                          menu_items = None, menu_item_headers = None):
+    if output is None: 
+        output = ''
+    if restaurants is None:
+        restaurants = session.query(Restaurant)
+    if menu_items is None:
+        for restaurant in restaurants:
+            menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
+    if menu_item_headers is None:
+        menu_item_headers = MenuItem.__table__.columns.keys()
+
     output = "<table>"
     output += "<tr>"
     for header in item_headers:
