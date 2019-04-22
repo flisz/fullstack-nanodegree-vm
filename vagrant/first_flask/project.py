@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -74,8 +74,9 @@ def site_add_restaurant(verified):
         session['username'] = request.form['username']
         return redirect(url_for('index'))
     return '''
+        <h2>Add New Restaurant:</h2> 
         <form method="post">
-            <p><input type=text name=username>
+            <p>Name:<input type=text name=restaurant_name>
             <p><input type=submit value=Login>
         </form>
     '''
@@ -138,6 +139,9 @@ def html_table_menu_items(verified = None,
     output += "<tr>"
     for header in item_headers:
         output += "<th>{}</th>".format(header)
+    if verified is True:
+        output += '<th>Edit</th>'
+        output += '<th>Delete</th>'
     output += "</tr>"
     for item in menu_items:
         # todo: generalize 
@@ -164,13 +168,22 @@ def edit_restaurant(restaurant_id):
 
 
 def site_edit_restaurants(restaurant_id, verified):
-    pass
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect(url_for('index'))
 
 
 def html_edit_restaurant(output = None, verified = None, 
                           restaurants = None, restaurant_headers = None, restaurant_id = None,  
                           menu_items = None, menu_item_headers = None, menu_item_id = None):
-    pass
+    
+    return '''
+        <h2>Add New Restaurant:</h2> 
+        <form method="post">
+            <p>Name:<input type=text name=restaurant_name>
+            <p><input type=submit value=Login>
+        </form>
+    '''
 
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET','POST'])
 def delete_restaurant(restaurant_id):
