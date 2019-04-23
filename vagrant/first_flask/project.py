@@ -238,8 +238,7 @@ def site_edit_menu_items(restaurant_id, menu_item_id, verified):
     return output
 
 
-def html_edit_menu_items(output = None, verified = None,
-                          restaurant, menu_item):
+def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
     if verified == True:
         output = '''
             <h2>Restaurant:{}</h2>
