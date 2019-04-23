@@ -26,8 +26,10 @@ def restaurants():
 def site_restaurant(verified = None):
     restaurants = session.query(Restaurant)
     for restaurant in restaurants:
-        add_restaurant = html_restaurant(restaurants, verified = verified, restaurant_headers = restaurant_headers)
-        output += add_restaurant        
+        add_restaurant_table = html_table_restaurant(restaurants, verified = verified, restaurant_headers = restaurant_headers)
+        output = ''
+        output += add_restaurant + '<p><a href=""'       
+
     return output
 
 
@@ -55,6 +57,8 @@ def html_table_restaurant(output = None, verified = None,
         column_data = getattr(restaurant, header)
         output += "<td>{}</td>".format(column_data)
         if verified is True:
+            edit_path = "edit"
+            delete_path = "delete"
             output += '<td><a href="{}"}>Edit</a></td>'.format(edit_path)
             output += '<td><a href="{}"}>Delete</a></td>'.format(delete_path)
     output += "</tr>"
