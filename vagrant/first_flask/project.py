@@ -18,6 +18,7 @@ session = DBSessionMaker()
 @app.route('/restaurant', methods=['GET'])
 def restaurants():
     restaurants = session.query(Restaurant)
+    verified = True
     output = site_restaurant(verified)    
     return output
 
@@ -295,8 +296,8 @@ def html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified =
                menu_item.name,
                menu_item.course, 
                menu_item.price,
-               menu_item.description
-               restaurant.name,)
+               menu_item.description,
+               restaurant.name)
     return output
 
 
