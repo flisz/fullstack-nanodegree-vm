@@ -234,7 +234,7 @@ def site_edit_menu_items(restaurant_id, menu_item_id, verified):
     menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
     for restaurant in restaurants:
         for menu_item in menu_items:
-            output = html_edit_menu_items(vero)
+            output = html_edit_menu_items(restaurant, menu_item, verified)
     return output
 
 
@@ -252,26 +252,31 @@ def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
                 </table>
                 <input type=submit value=Accept>
             </form>
-    '''.format(restaurant.name,
-                menu_item.name,
-                menu_item.name,
-                menu_item.course, 
-                menu_item.price,
-                menu_item.description)
+        '''.format(restaurant.name,
+                    menu_item.name,
+                    menu_item.name,
+                    menu_item.course, 
+                    menu_item.price,
+                    menu_item.description)
+    return output
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/delete', methods=['GET','POST'])
 def delete_menu_items(restaurant_id, menu_item_id):
     verified = True
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
     output = site_restaurants_with_menu_items(restaurant, menu_item, verified)
     return output
 
 
 def site_delete_menu_items(restaurant_id, menu_item_id, verified):
-    pass
+    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+    menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
+    for restaurant in restaurants:
+        for menu_item in menu_items:
+            output = html_delete_menu_item(restaurant, menu_item, verified)
+    return output
 
 
-html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified = None):
+def html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified = None):
     if verified == True:
         output = '''
             Menu Item: 
@@ -286,12 +291,13 @@ html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified = Non
                     </table>
                     <input type=submit value=Accept>
                 </form>
-    '''.format(menu_item.name,
+        '''.format(menu_item.name,
                menu_item.name,
                menu_item.course, 
                menu_item.price,
                menu_item.description
                restaurant.name,)
+    return output
 
 
 if __name__ == '__main__':
