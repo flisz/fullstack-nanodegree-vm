@@ -230,10 +230,35 @@ def menu_item(restaurant_id, menu_item_id):
 
 
 def site_edit_menu_items(restaurant_id, menu_item_id, verified):
-    
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
     menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
+    for restaurant in restaurants:
+        for menu_item in menu_items:
+            output = html_edit_menu_items(vero)
+    return output
 
+
+def html_edit_menu_items(output = None, verified = None,
+                          restaurant, menu_item):
+    if verified == True:
+        output = '''
+            <h2>Restaurant:{}</h2>
+            <h2>Edit:{}</h2> 
+            <form method="post">
+                <table>
+                <tr><td>Name:</td><td>{}</td><td><input type=text name=item_name></td></tr>
+                <tr><td>Course</td><td>{}</td><td><input type=text name=item_course></td></tr>
+                <tr><td>Price:</td><td>{}</td><td><input type=text name=item_price></td></tr>
+                <tr><td>Description:</td><td>{}</td><td><input type=text name=item_description></td></tr>
+                </table>
+                <input type=submit value=Login>
+            </form>
+    '''.format(restaurant.name,
+                menu_item.name,
+                menu_item.name,
+                menu_item.course, 
+                menu_item.price,
+                menu_item.description)
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/delete', methods=['GET','POST'])
 def menu_item(restaurant_id, menu_item_id):
