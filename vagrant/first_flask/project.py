@@ -223,7 +223,7 @@ def menu_item(restaurant_id, menu_item_id):
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/edit', methods=['GET','POST'])
-def menu_item(restaurant_id, menu_item_id):
+def edit_menu_item(restaurant_id, menu_item_id):
     verified = True
     output = site_edit_menu_items(restaurant_id, menu_item_id, verified)
     return output
@@ -250,7 +250,7 @@ def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
                 <tr><td>Price:</td><td>{}</td><td><input type=text name=item_price></td></tr>
                 <tr><td>Description:</td><td>{}</td><td><input type=text name=item_description></td></tr>
                 </table>
-                <input type=submit value=Login>
+                <input type=submit value=Accept>
             </form>
     '''.format(restaurant.name,
                 menu_item.name,
@@ -260,14 +260,38 @@ def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
                 menu_item.description)
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/delete', methods=['GET','POST'])
-def menu_item(restaurant_id, menu_item_id):
+def delete_menu_items(restaurant_id, menu_item_id):
+    verified = True
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    output = site_restaurants_with_menu_items(restaurants)
+    output = site_restaurants_with_menu_items(restaurant, menu_item, verified)
     return output
 
 
 def site_delete_menu_items(restaurant_id, menu_item_id, verified):
     pass
+
+
+html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified = None):
+    if verified == True:
+        output = '''
+            Menu Item: 
+                <h2>Edit:{}</h2> 
+                <form method="post">
+                    <table>
+                    <tr><td>Name:</td><td>{}</td></tr>
+                    <tr><td>Course</td><td>{}</td></tr>
+                    <tr><td>Price:</td><td>{}</td></tr>
+                    <tr><td>Description:</td><td>{}</td></tr>
+                    <tr><td>Restaurant:</td><td>{}</td></tr>
+                    </table>
+                    <input type=submit value=Accept>
+                </form>
+    '''.format(menu_item.name,
+               menu_item.name,
+               menu_item.course, 
+               menu_item.price,
+               menu_item.description
+               restaurant.name,)
 
 
 if __name__ == '__main__':
