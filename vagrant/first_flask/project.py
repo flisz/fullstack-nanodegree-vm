@@ -25,10 +25,11 @@ def restaurants():
 
 def site_restaurant(verified = None):
     restaurants = session.query(Restaurant)
+    restaurant_headers = None
     for restaurant in restaurants:
         add_restaurant_table = html_table_restaurant(restaurants, verified = verified, restaurant_headers = restaurant_headers)
         output = ''
-        output += add_restaurant + '<p><a href=""'       
+        output += add_restaurant_table + '<p><a href=""'       
 
     return output
 
