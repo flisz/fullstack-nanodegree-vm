@@ -151,14 +151,11 @@ def html_table_menu_items(verified = None,
         for header in menu_item_headers:
             column_data = getattr(menu_item, header)
             output += "<td>{}</td>".format(column_data)
-            if verified is True:
-                output += '<th>Edit</th>'
-                output += '<th>Delete</th>'
         if verified is True:
             edit_path = "/restaurant/{}/{}/edit".format(restaurant.id,menu_item.id)
             delete_path = "/restaurant/{}/{}/delete".format(restaurant.id,menu_item.id)
-            output += '<td><a href="{}"}>Edit</a></td>'.format(edit_path)
-            output += '<td><a href="{}"}>Delete</a></td>'.format(delete_path)
+            output += '<td><a href="{}">Edit</a></td>'.format(edit_path)
+            output += '<td><a href="{}">Delete</a></td>'.format(delete_path)
         output += "</tr>"
     output += "</table>"
     output += "<br>"
