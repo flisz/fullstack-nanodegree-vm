@@ -121,7 +121,13 @@ def site_restaurants_with_menu_items(output=None, verified = None,
                                      menu_items = None, menu_item_headers = None):
         output = ''
         for restaurant in restaurants:
-            output += "<h2>{}: (#{})<h2>".format(restaurant.name, restaurant.id)
+            output += "<h2>"
+            output += "{}: (#{})".format(restaurant.name, restaurant.id)
+            edit_path = "/restaurant/{}/edit".format(restaurant.id)
+            delete_path = "/restaurant/{}/delete".format(restaurant.id)
+            output += '<a href="{}">Edit</a>'.format(edit_path)
+            output += '<a href="{}">Delete</a>'.format(delete_path)
+            "<h2>"
             if verified is True: 
                 '<h4><a href="/restaurant/{}/menu/add">Add Menu Item</a></h4>'.format(restaurant.id)
             output += "<h3>Menu:<h3>"
