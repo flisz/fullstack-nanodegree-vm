@@ -52,6 +52,7 @@ def html_table_restaurant(output = None, verified = None,
     output += "<tr>"
     for header in restaurant_headers:
         output += "<th>{}</th>".format(header)
+    output += '<th>Menu</th>'
     if verified is True:
         output += '<th>Edit</th>'
         output += '<th>Delete</th>'
@@ -61,6 +62,8 @@ def html_table_restaurant(output = None, verified = None,
         for header in restaurant_headers:
             column_data = getattr(restaurant, header)
             output += "<td>{}</td>".format(column_data)
+        menu_path = "/restaurant/{}/menu".format(restaurant.id)
+        output += '<td><a href="{}">Menu</a></td>'.format(edit_path)
         if verified is True:
             edit_path = "/restaurant/{}/edit".format(restaurant.id)
             delete_path = "/restaurant/{}/delete".format(restaurant.id)
@@ -99,14 +102,14 @@ def site_add_restaurant(verified):
     else:
         return redirect("restaurant")
 
-
+@app.route('/restaurant/<int:restaurant_id>/menu')
 @app.route('/restaurant/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
     verified = True
     restaurant_headers = None
     menu_item_headers = None
-    output = site_restaurants_with_menu_items(restaurants, restaurant_headers, menu_item_headers, verified)
+    output = site_restaurants_with_menu_items(restaurants = restaurants, restaurant_headers = restaurant_headers, menu_item_headers = menu_item_headers, verified = verified)
     return output
 
 
@@ -135,7 +138,6 @@ def site_restaurants_with_menu_items(output=None, verified = None,
                 raise ValueError("resturant_id:{} and menu_item.resturant_id:{} do not match")
             for restaurant in restaurants:
                 output += "<h2>{}: (#{})<h2>".format(restaurant.name, restaurant.id)
-                add_restaurant = html_table_restaurant(restaurants = restaurant, restaurant_headers = restaurant_headers)
                 output += "<h2>Menu:<h2>"
                 add_menu_items = html_table_menu_items(restaurants = restaurant, menu_items = menu_items, menu_item_headers = menu_item_headers)
                 output += add_restaurant + ad_menu_items         
@@ -169,6 +171,9 @@ def html_table_menu_items(verified = None,
         for header in item_headers:
             column_data = getattr(item, header)
             output += "<td>{}</td>".format(column_data)
+            if verified is True:
+                output += '<th>Edit</th>'
+                output += '<th>Delete</th>'
         if verified is True:
             output += '<td><a href="{}"}>Edit</a></td>'.format(edit_path)
             output += '<td><a href="{}"}>Delete</a></td>'.format(delete_path)
