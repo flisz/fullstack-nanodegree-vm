@@ -48,7 +48,6 @@ def html_table_restaurant(output = None, verified = None,
     if restaurant_headers is None:
         restaurant_headers = Restaurant.__table__.columns.keys()
 
-    print("restaurant_headers: {}".format(restaurant_headers))
     output += "<table>"
     output += "<tr>"
     for header in restaurant_headers:
@@ -81,16 +80,24 @@ def add_restaurant():
 
 
 def site_add_restaurant(verified):
-    if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for('index'))
-    return '''
-        <h2>Add New Restaurant:</h2> 
-        <form method="post">
-            <p>Name:<input type=text name=restaurant_name>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+    if verified is True: 
+        if request.method == 'POST':
+            name = request.form['restaurant_name']
+            restaurant = Restaurant()
+            restaurant.name = name
+            session.add(restaurant)
+            session.commit()
+            return redirect("/restaurant")
+        return '''
+            <h2>Add New Restaurant:</h2> 
+            <form method="post">
+                <p>Name:<input type=text name=restaurant_name>
+                <p><input type=submit value=Add>
+                <p><a href="/restaurant">Back</a><p>
+            </form>
+        '''
+    else:
+        return redirect("restaurant")
 
 
 @app.route('/restaurant/<int:restaurant_id>/')
