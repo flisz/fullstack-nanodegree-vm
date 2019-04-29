@@ -219,28 +219,25 @@ def delete_restaurant(restaurant_id):
                 for menu_item in menu_items:
                     session.delete(menu_item)
                 session.delete(restaurant)
-            session.commit()
-            if request.method == 'GET':
+                session.commit()
+            elif request.method == 'GET':
                 main_path = '/restaurant'
                 output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
-                add_content = html_delete_restaurant(restaurant, verified)
+                add_content = html_delete_restaurant(restaurant)
                 output += add_content
                 return output
     return redirect("/restaurant".format(restaurant.id))
 
 
-def html_delete_restaurant(restaurant, verified):
-    if verified is True:
-        return '''
-            <h2>Delete Restaurant:{}</h2> 
-            <form method="post">
-                <p><input type=submit value=Confirm>
-            </form>
-            <p><a href="/restaurant/{}/menu">To Menu</a><p>
-            <p><a href="/restaurant">Back to Restaurants</a><p>
-        '''.format(restaurant.name, restaurant.id)
-    else:
-        return redirect("/restaurant/{}/menu".format(restaurant.id))
+def html_delete_restaurant(restaurant):
+    return '''
+        <h2>Delete Restaurant:{}</h2> 
+        <form method="post">
+            <p><input type=submit value=Confirm>
+        </form>
+        <p><a href="/restaurant/{}/menu">To Menu</a><p>
+        <p><a href="/restaurant">Back to Restaurants</a><p>
+    '''.format(restaurant.name, restaurant.id)
 
 
 @app.route('/restaurant/<int:restaurant_id>/menu/add', methods=['GET','POST'])
@@ -364,10 +361,10 @@ def delete_menu_items(restaurant_id, menu_item_id):
             for menu_item in menu_items:   
                 if request.method == 'POST':
                     session.delete(menu_item)
-                if request.method == 'GET':
+                elif request.method == 'GET':
                     main_path = '/restaurant'
                     output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
-                    add_content = html_delete_restaurant(restaurant, menu_item)
+                    add_content = html_delete_menu_item(restaurant, menu_item)
                     output += add_content
                     return output
             session.commit()
@@ -375,7 +372,7 @@ def delete_menu_items(restaurant_id, menu_item_id):
     return redirect(menu_path)
 
 
-def html_delete_restaurant(restaurant, menu_item):
+def html_delete_menu_item(restaurant, menu_item):
     return '''
         <h2>Confirm Menu Item Delete:{}</h2> 
         <form method="post">
