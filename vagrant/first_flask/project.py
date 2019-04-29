@@ -13,16 +13,16 @@ Base.metadata.bind = engine
 DBSessionMaker = sessionmaker(bind=engine)
 session = DBSessionMaker()
 
+verified = False
 
 @app.route('/', methods=['GET'])
 def restaurants_redirect():
-    return redirect("restaurant")
+    return redirect("/restaurant")
 
-
+@app.route('/restaurant/', methods=['GET'])
 @app.route('/restaurant', methods=['GET'])
 def restaurants():
     restaurants = session.query(Restaurant)
-    verified = True
     output = site_restaurant(verified)    
     return output
 
@@ -77,7 +77,6 @@ def html_table_restaurant(output = None, verified = None,
 
 @app.route('/restaurant/add', methods=['GET','POST'])
 def add_restaurant():
-    verified = True
     output = site_add_restaurant(verified)    
     return output
 
@@ -108,7 +107,7 @@ def restaurant_menu(restaurant_id):
     print(restaurant_id)
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
     menu_items = session.query(MenuItem).filter(MenuItem.restaurant_id==restaurant_id)
-    verified = True
+
     menu_item_headers = None
     output = site_restaurants_with_menu_items(restaurants = restaurants, 
                                               menu_items = menu_items, menu_item_headers = menu_item_headers, 
@@ -125,8 +124,8 @@ def site_restaurants_with_menu_items(output=None, verified = None,
             output += "{}: (#{})".format(restaurant.name, restaurant.id)
             edit_path = "/restaurant/{}/edit".format(restaurant.id)
             delete_path = "/restaurant/{}/delete".format(restaurant.id)
-            output += '<a href="{}">Edit</a>'.format(edit_path)
-            output += '<a href="{}">Delete</a>'.format(delete_path)
+            output += '<a href="{}"> Edit </a>'.format(edit_path)
+            output += '<a href="{}"> Delete </a>'.format(delete_path)
             "<h2>"
             if verified is True: 
                 '<h4><a href="/restaurant/{}/menu/add">Add Menu Item</a></h4>'.format(restaurant.id)
@@ -171,76 +170,87 @@ def html_table_menu_items(verified = None,
 @app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET','POST'])
 def edit_restaurant(restaurant_id):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    verified = True
-    if request.method == 'POST':
-        if verified is True:
-            name = request.form['restaurant_name']
-            for restaruant in restaruants:
-                restaurant = session.query(Restaruant).filter(Restaurant.id==restaurant_id)
+    if verified is True:
+        for restaurant in restaurants:
+            if request.method == 'POST':
+                name = request.form['restaurant_name']
                 restaurant.name = name
-            session.commit()
-        return redirect("/restaurant")
-    else:
-        output = html_edit_restaurant(restaurant_id, verified)
-        return output
+                session.commit()
+            if request.method == 'GET':
+                output = html_edit_restaurant(restaurant, verified)
+                return output
+    return redirect("/restaurant".format(restaurant.id))
 
 
-def html_edit_restaurant(restaruant,verified):
+def html_edit_restaurant(restaurant,verified):
     if verified is True:
         return '''
-            <h2>Edit Restaurant:{}</h2> 
+            <h2>Edit Restaurant:{} (#{})</h2> 
             <form method="post">
                 <p>Name:<input type=text name=restaurant_name>
                 <p><input type=submit value=Submit>
             </form>
-            <p><a href="/restaurant/{}/menu">to Menu</a><p>
+            <p><a href="/restaurant/{}/menu">To Menu</a><p>
+            <p><a href="/restaurant/{}/menu/add">Add Menu Items</a><p>
             <p><a href="/restaurant">Back to Restaurants</a><p>
-        '''
+        '''.format(restaurant.name, restaurant.id, restaurant.id, restaurant.id)
     else:
-        return redirect("/restaurant")
+        return redirect("/restaurant/{}/menu".format(restaurant.id))
+
 
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET','POST'])
 def delete_restaurant(restaurant_id):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    verified = True
-    output = site_delete_restaurants(restaurant_id, verified)
-    return output
-
-
-def site_delete_restaurants(restaurant_id, verified):
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    verified = True
-    if request.method == 'POST':
-        if verified is True:
-            for restaruant in restaruants:
-                restaurant = session.delete(restaurant)
+    if verified is True:
+        for restaurant in restaurants:
+            if request.method == 'POST':
+                menu_items = session.query(MenuItem).filter(MenuItem.restaurant_id==restaurant_id)
+                for menu_item in menu_items:
+                    session.delete(menu_item)
+                session.delete(restaurant)
             session.commit()
-        return redirect("/restaurant")
-    else:
-        output = html_delete_restaurant(restaurant_id, verified)
-        return output
+            if request.method == 'GET':
+                output = html_delete_restaurant(restaurant, verified)
+                return output
+    return redirect("/restaurant".format(restaurant.id))
 
 
-def html_delete_restaurant(output = None, verified = None, 
-                          restaurant = None):
+def html_delete_restaurant(restaurant, verified):
     if verified is True:
         return '''
             <h2>Delete Restaurant:{}</h2> 
             <form method="post">
                 <p><input type=submit value=Confirm>
             </form>
-            <p><a href="/restaurant/{}/menu">to Menu</a><p>
+            <p><a href="/restaurant/{}/menu">To Menu</a><p>
             <p><a href="/restaurant">Back to Restaurants</a><p>
-        '''.format(restaurant.name,restaurant.id)
+        '''.format(restaurant.name, restaurant.id)
     else:
-        return redirect("/restaurant")
+        return redirect("/restaurant/{}/menu".format(restaurant.id))
 
-@app.route('/restaurant/<int:restaurant_id>/add_menu_items', methods=['GET','POST'])
+@app.route('/restaurant/<int:restaurant_id>/menu/add', methods=['GET','POST'])
 def restaurant_add_menu_items(restaurant_id):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    verified = True
-    output = site_restaurant_add_menu_item(restaurant)
-    return output
+
+    if verified is True:
+        if request.method == 'POST':
+            for restaurant in restaurants:
+                menu_item = MenuItem()
+                menu_item.restaurant = restaurant
+                if request.form.get(item_name,'') != '':
+                    menu_item.name = request.form['item_name']
+                if request.form.get(item_description,'') != '':
+                    menu_item.description = request.form['item_description']
+                if request.form.get(item_price,'') != '':
+                    menu_item.price = request.form['item_price']
+                if request.form.get(item_course,'') != '':
+                    menu_item.course = request.form['item_course']
+            session.add(menu_item)
+            session.commit()
+        if request.method == 'GET':
+            output = site_restaurant_add_menu_item(restaurant)
+            return output
+    return redirect("/restaurant/{}/menu".format(restaurant_id))
 
 
 def site_restaurant_add_menu_item(restaurant_id, verified):
@@ -252,8 +262,8 @@ def site_restaurant_add_menu_item(restaurant_id, verified):
     return output
 
 
-def html_add_menu_items(restaurant, menu_item, output = None, verified = None):
-    if verified == True:
+def html_add_menu_items(restaurant, menu_item, verified):
+    if verified is True:
         output = '''
             <h2>Restaurant:{}</h2>
             <h2>Add Menu Item:{}</h2> 
@@ -291,9 +301,26 @@ def menu_item(restaurant_id, menu_item_id):
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/edit', methods=['GET','POST'])
 def edit_menu_item(restaurant_id, menu_item_id):
-    verified = True
-    output = site_edit_menu_items(restaurant_id, menu_item_id, verified)
-    return output
+    if verified == True: 
+        if request.method == 'POST':
+            for restaurant in restaurants:
+                menu_item = session.query(MenuItem).filter(MenuItem.id == menu_item_id)
+                menu_item.restaurant = restaurant
+                if request.form.get(item_name,'') != '':
+                    menu_item.name = request.form['item_name']
+                if request.form.get(item_description,'') != '':
+                    menu_item.description = request.form['item_description']
+                if request.form.get(item_price,'') != '':
+                    menu_item.price = request.form['item_price']
+                if request.form.get(item_course,'') != '':
+                    menu_item.course = request.form['item_course']
+            session.commit()
+        if request.method == 'GET':
+            output = site_edit_menu_items(restaurant_id, menu_item_id, verified)
+            return output
+        else:
+            menu_path = "/restaurant/{}/menu".format(restaurant.id)
+            return redirect(menu_path)
 
 
 def site_edit_menu_items(restaurant_id, menu_item_id, verified):
@@ -335,8 +362,8 @@ def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/delete', methods=['GET','POST'])
 def delete_menu_items(restaurant_id, menu_item_id):
-    verified = True
-    output = site_restaurants_with_menu_items(restaurant, menu_item, verified)
+
+    output = site_delete_menu_items(restaurant, menu_item, verified)
     return output
 
 
@@ -374,4 +401,5 @@ def html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified =
 
 
 if __name__ == '__main__':
+    verified = True
     app.run(host='0.0.0.0', port=5000)
