@@ -23,7 +23,10 @@ def restaurants_redirect():
 @app.route('/restaurant', methods=['GET'])
 def restaurants():
     restaurants = session.query(Restaurant)
-    output = site_restaurant(verified)    
+    main_path = '/restaurant'
+    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+    add_content = site_restaurant(verified)    
+    output += add_content
     return output
 
 
@@ -77,7 +80,10 @@ def html_table_restaurant(output = None, verified = None,
 
 @app.route('/restaurant/add', methods=['GET','POST'])
 def add_restaurant():
-    output = site_add_restaurant(verified)    
+    main_path = '/restaurant'
+    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+    add_content = site_add_restaurant(verified)    
+    output += add_content
     return output
 
 
@@ -104,37 +110,40 @@ def site_add_restaurant(verified):
 @app.route('/restaurant/<int:restaurant_id>/menu')
 @app.route('/restaurant/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
-    print(restaurant_id)
+    main_path = '/restaurant'
+    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
     menu_items = session.query(MenuItem).filter(MenuItem.restaurant_id==restaurant_id)
-
     menu_item_headers = None
-    output = site_restaurants_with_menu_items(restaurants = restaurants, 
+    add_content = site_restaurants_with_menu_items(restaurants = restaurants, 
                                               menu_items = menu_items, menu_item_headers = menu_item_headers, 
                                               verified = verified)
+    output += add_content
     return output
 
 
 def site_restaurants_with_menu_items(output=None, verified = None,
                                      restaurants = None,  
                                      menu_items = None, menu_item_headers = None):
-        output = ''
-        for restaurant in restaurants:
-            output += "<h2>"
-            output += "{}: (#{})".format(restaurant.name, restaurant.id)
-            edit_path = "/restaurant/{}/edit".format(restaurant.id)
-            delete_path = "/restaurant/{}/delete".format(restaurant.id)
-            output += '<a href="{}"> Edit </a>'.format(edit_path)
-            output += '<a href="{}"> Delete </a>'.format(delete_path)
-            "<h2>"
-            if verified is True: 
-                '<h4><a href="/restaurant/{}/menu/add">Add Menu Item</a></h4>'.format(restaurant.id)
-            output += "<h3>Menu:<h3>"
-            add_menu_item_table = html_table_menu_items(verified = verified,
-                          restaurant = restaurant, 
-                          menu_items = menu_items, menu_item_headers = menu_item_headers)
-            output += add_menu_item_table        
-        return output
+    output = ''
+    for restaurant in restaurants:
+        output += "<h2>"
+        output += "{}: (#{})".format(restaurant.name, restaurant.id)
+        edit_path = "/restaurant/{}/edit".format(restaurant.id)
+        delete_path = "/restaurant/{}/delete".format(restaurant.id)
+        output += '<a href="{}"> Edit </a>'.format(edit_path)
+        output += '<a href="{}"> Delete </a>'.format(delete_path)
+        "<h2>"
+        output += '<h3>Menu:  '
+        if verified is True: 
+            output += '<a href="/restaurant/{}/menu/add">Add Menu Item</a><h3>'.format(restaurant.id)
+            '<h4><a href="/restaurant/{}/menu/add">Add Menu Item</a></h4>'.format(restaurant.id)
+        output += '<h3>'
+        add_menu_item_table = html_table_menu_items(verified = verified,
+                      restaurant = restaurant, 
+                      menu_items = menu_items, menu_item_headers = menu_item_headers)
+        output += add_menu_item_table        
+    return output
 
 
 def html_table_menu_items(verified = None,
@@ -142,7 +151,6 @@ def html_table_menu_items(verified = None,
                           menu_items = None, menu_item_headers = None):
     if menu_item_headers is None:
         menu_item_headers = MenuItem.__table__.columns.keys()
-
     output = "<table>"
     output += "<tr>"
     for header in menu_item_headers:
@@ -177,7 +185,10 @@ def edit_restaurant(restaurant_id):
                 restaurant.name = name
                 session.commit()
             if request.method == 'GET':
-                output = html_edit_restaurant(restaurant, verified)
+                main_path = '/restaurant'
+                output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+                add_content = html_edit_restaurant(restaurant, verified)
+                output += add_content
                 return output
     return redirect("/restaurant".format(restaurant.id))
 
@@ -210,7 +221,10 @@ def delete_restaurant(restaurant_id):
                 session.delete(restaurant)
             session.commit()
             if request.method == 'GET':
-                output = html_delete_restaurant(restaurant, verified)
+                main_path = '/restaurant'
+                output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+                add_content = html_delete_restaurant(restaurant, verified)
+                output += add_content
                 return output
     return redirect("/restaurant".format(restaurant.id))
 
@@ -228,35 +242,38 @@ def html_delete_restaurant(restaurant, verified):
     else:
         return redirect("/restaurant/{}/menu".format(restaurant.id))
 
+
 @app.route('/restaurant/<int:restaurant_id>/menu/add', methods=['GET','POST'])
 def restaurant_add_menu_items(restaurant_id):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-
     if verified is True:
         if request.method == 'POST':
             for restaurant in restaurants:
                 menu_item = MenuItem()
                 menu_item.restaurant = restaurant
-                if request.form.get(item_name,'') != '':
+                if request.form.get('item_name','') != '':
                     menu_item.name = request.form['item_name']
-                if request.form.get(item_description,'') != '':
+                if request.form.get('item_description','') != '':
                     menu_item.description = request.form['item_description']
-                if request.form.get(item_price,'') != '':
+                if request.form.get('item_price','') != '':
                     menu_item.price = request.form['item_price']
-                if request.form.get(item_course,'') != '':
+                if request.form.get('item_course','') != '':
                     menu_item.course = request.form['item_course']
-            session.add(menu_item)
+                session.add(menu_item)
             session.commit()
         if request.method == 'GET':
-            output = site_restaurant_add_menu_item(restaurant)
+            main_path = '/restaurant'
+            output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+            add_content = site_restaurant_add_menu_item(restaurant_id, verified)
+            output += add_content
             return output
     return redirect("/restaurant/{}/menu".format(restaurant_id))
 
 
 def site_restaurant_add_menu_item(restaurant_id, verified):
     restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
     for restaurant in restaurants:
+        menu_items = session.query(MenuItem).filter(MenuItem.restaurant_id==restaurant_id)
         for menu_item in menu_items:
             output = html_add_menu_items(restaurant, menu_item, verified)
     return output
@@ -266,7 +283,7 @@ def html_add_menu_items(restaurant, menu_item, verified):
     if verified is True:
         output = '''
             <h2>Restaurant:{}</h2>
-            <h2>Add Menu Item:{}</h2> 
+            <h2>Add Menu Item:</h2> 
             <form method="post">
                 <table>
                 <tr><td>Name:</td><td><input type=text name=item_name></td></tr>
@@ -279,125 +296,94 @@ def html_add_menu_items(restaurant, menu_item, verified):
             <p><a href="/restaurant/{}/menu">Back to Menu</a><p>
             <p><a href="/restaurant">Back to Restaurants</a><p>
         '''.format(restaurant.name,
-                    menu_item.name,
-                    menu_item.name,
-                    menu_item.course, 
-                    menu_item.price,
-                    menu_item.description,
                     restaurant.id)
         return output
     else:
         menu_path = "/restaurant/{}/menu".format(restaurant.id)
         return redirect(menu_path)
-
-
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/')
-def menu_item(restaurant_id, menu_item_id):
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
-    output = site_restaurants_with_menu_items(restaurants = restaurants, menu_items = menu_items)
-    return output
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/edit', methods=['GET','POST'])
 def edit_menu_item(restaurant_id, menu_item_id):
-    if verified == True: 
-        if request.method == 'POST':
-            for restaurant in restaurants:
-                menu_item = session.query(MenuItem).filter(MenuItem.id == menu_item_id)
-                menu_item.restaurant = restaurant
-                if request.form.get(item_name,'') != '':
-                    menu_item.name = request.form['item_name']
-                if request.form.get(item_description,'') != '':
-                    menu_item.description = request.form['item_description']
-                if request.form.get(item_price,'') != '':
-                    menu_item.price = request.form['item_price']
-                if request.form.get(item_course,'') != '':
-                    menu_item.course = request.form['item_course']
-            session.commit()
-        if request.method == 'GET':
-            output = site_edit_menu_items(restaurant_id, menu_item_id, verified)
-            return output
-        else:
-            menu_path = "/restaurant/{}/menu".format(restaurant.id)
-            return redirect(menu_path)
+    if verified is True: 
+        restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+        menu_items = session.query(MenuItem).filter(MenuItem.id == menu_item_id)
+        for restaurant in restaurants:
+            for menu_item in menu_items:
+                if request.method == 'POST':
+                    menu_item.restaurant = restaurant
+                    if request.form.get('item_name','') != '':
+                        menu_item.name = request.form['item_name']
+                    if request.form.get('item_description','') != '':
+                        menu_item.description = request.form['item_description']
+                    if request.form.get('item_price','') != '':
+                        menu_item.price = request.form['item_price']
+                    if request.form.get('item_course','') != '':
+                        menu_item.course = request.form['item_course']
+                    session.commit()
+                if request.method == 'GET':
+                    main_path = '/restaurant'
+                    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+                    add_content = html_edit_menu_items(restaurant, menu_item)
+                    output += add_content
+                    return output
+    menu_path = "/restaurant/{}/menu".format(restaurant.id)
+    return redirect(menu_path)
 
 
-def site_edit_menu_items(restaurant_id, menu_item_id, verified):
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
-    for restaurant in restaurants:
-        for menu_item in menu_items:
-            output = html_edit_menu_items(restaurant, menu_item, verified)
+def html_edit_menu_items(restaurant, menu_item):
+    output = '''
+        <h2>Restaurant:{}</h2>
+        <h2>Edit:{}</h2> 
+        <form method="post">
+            <table>
+            <tr><td>Name:</td><td>{}</td><td><input type=text name=item_name></td></tr>
+            <tr><td>Course</td><td>{}</td><td><input type=text name=item_course></td></tr>
+            <tr><td>Price:</td><td>{}</td><td><input type=text name=item_price></td></tr>
+            <tr><td>Description:</td><td>{}</td><td><input type=text name=item_description></td></tr>
+            </table>
+            <input type=submit value=Accept>
+        </form>
+        <p><a href="/restaurant/{}/menu">Back to Menu</a><p>
+        <p><a href="/restaurant">Back to Restaurants</a><p>
+    '''.format(restaurant.name,
+                menu_item.name,
+                menu_item.name,
+                menu_item.course, 
+                menu_item.price,
+                menu_item.description,
+                restaurant.id)
     return output
-
-
-def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
-    if verified == True:
-        output = '''
-            <h2>Restaurant:{}</h2>
-            <h2>Edit:{}</h2> 
-            <form method="post">
-                <table>
-                <tr><td>Name:</td><td>{}</td><td><input type=text name=item_name></td></tr>
-                <tr><td>Course</td><td>{}</td><td><input type=text name=item_course></td></tr>
-                <tr><td>Price:</td><td>{}</td><td><input type=text name=item_price></td></tr>
-                <tr><td>Description:</td><td>{}</td><td><input type=text name=item_description></td></tr>
-                </table>
-                <input type=submit value=Accept>
-            </form>
-            <p><a href="/restaurant/{}/menu">Back to Menu</a><p>
-            <p><a href="/restaurant">Back to Restaurants</a><p>
-        '''.format(restaurant.name,
-                    menu_item.name,
-                    menu_item.name,
-                    menu_item.course, 
-                    menu_item.price,
-                    menu_item.description,
-                    restaurant.id)
-        return output
-    else:
-        menu_path = "/restaurant/{}/menu".format(restaurant.id)
-        return redirect(menu_path)
-
+    
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/delete', methods=['GET','POST'])
 def delete_menu_items(restaurant_id, menu_item_id):
+    if verified is True:
+        restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+        menu_items = session.query(MenuItem).filter(MenuItem.id == menu_item_id)
+        for restaurant in restaurants:
+            for menu_item in menu_items:   
+                if request.method == 'POST':
+                    session.delete(menu_item)
+                if request.method == 'GET':
+                    main_path = '/restaurant'
+                    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
+                    add_content = html_delete_restaurant(restaurant, menu_item)
+                    output += add_content
+                    return output
+            session.commit()
+    menu_path = "/restaurant/{}/menu".format(restaurant.id)
+    return redirect(menu_path)
 
-    output = site_delete_menu_items(restaurant, menu_item, verified)
-    return output
 
-
-def site_delete_menu_items(restaurant_id, menu_item_id, verified):
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-    menu_items = session.query(MenuItem).filter(MenuItem.id==menu_item_id)
-    for restaurant in restaurants:
-        for menu_item in menu_items:
-            output = html_delete_menu_item(restaurant, menu_item, verified)
-    return output
-
-
-def html_delete_menu_item(restaurant_id, menu_item_id, output = None, verified = None):
-    if verified == True:
-        output = '''
-            Menu Item: 
-                <h2>Edit:{}</h2> 
-                <form method="post">
-                    <table>
-                    <tr><td>Name:</td><td>{}</td></tr>
-                    <tr><td>Course</td><td>{}</td></tr>
-                    <tr><td>Price:</td><td>{}</td></tr>
-                    <tr><td>Description:</td><td>{}</td></tr>
-                    <tr><td>Restaurant:</td><td>{}</td></tr>
-                    </table>
-                    <input type=submit value=Accept>
-                </form>
-        '''.format(menu_item.name,
-               menu_item.name,
-               menu_item.course, 
-               menu_item.price,
-               menu_item.description,
-               restaurant.name)
-    return output
+def html_delete_restaurant(restaurant, menu_item):
+    return '''
+        <h2>Confirm Menu Item Delete:{}</h2> 
+        <form method="post">
+            <p><input type=submit value=Confirm>
+        </form>
+        <p><a href="/restaurant/{}/menu">To Menu</a><p>
+        <p><a href="/restaurant">Back to Restaurants</a><p>
+    '''.format(menu_item.name, restaurant.id)
 
 
 if __name__ == '__main__':
