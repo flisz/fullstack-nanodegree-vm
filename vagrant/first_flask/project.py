@@ -119,6 +119,7 @@ def restaurant_menu(restaurant_id):
 def site_restaurants_with_menu_items(output=None, verified = None,
                                      restaurants = None,  
                                      menu_items = None, menu_item_headers = None):
+        output = ''
         for restaurant in restaurants:
             output += "<h2>{}: (#{})<h2>".format(restaurant.name, restaurant.id)
             if verified is True: 
@@ -134,29 +135,21 @@ def site_restaurants_with_menu_items(output=None, verified = None,
 def html_table_menu_items(verified = None,
                           restaurant = None, 
                           menu_items = None, menu_item_headers = None):
-    if restaurants is None:
-        restaurants = session.query(Restaurant)
-    if menu_items is None:
-        for restaurant in restaurants:
-            menu_items = session.query(MenuItem).filter(MenuItem.restaurant == restaurant)
     if menu_item_headers is None:
         menu_item_headers = MenuItem.__table__.columns.keys()
 
     output = "<table>"
     output += "<tr>"
-    for header in item_headers:
+    for header in menu_item_headers:
         output += "<th>{}</th>".format(header)
     if verified is True:
         output += '<th>Edit</th>'
         output += '<th>Delete</th>'
     output += "</tr>"
-    for item in menu_items:
-        # todo: generalize 
-        item_headers = MenuItem.__table__.columns.keys()
-        print("item_headers: {}".format(item_headers))
+    for menu_item in menu_items:
         output += "<tr>"
-        for header in item_headers:
-            column_data = getattr(item, header)
+        for header in menu_item_headers:
+            column_data = getattr(menu_item, header)
             output += "<td>{}</td>".format(column_data)
             if verified is True:
                 output += '<th>Edit</th>'
@@ -277,7 +270,7 @@ def html_add_menu_items(restaurant, menu_item, output = None, verified = None):
                     menu_item.name,
                     menu_item.course, 
                     menu_item.price,
-                    menu_item.description
+                    menu_item.description,
                     restaurant.id)
         return output
     else:
@@ -330,7 +323,7 @@ def html_edit_menu_items(restaurant, menu_item, output = None, verified = None):
                     menu_item.name,
                     menu_item.course, 
                     menu_item.price,
-                    menu_item.description
+                    menu_item.description,
                     restaurant.id)
         return output
     else:
