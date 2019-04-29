@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -15,6 +15,10 @@ session = DBSessionMaker()
 
 
 @app.route('/', methods=['GET'])
+def restaurants_redirect():
+    return redirect("restaurant")
+
+
 @app.route('/restaurant', methods=['GET'])
 def restaurants():
     restaurants = session.query(Restaurant)
@@ -27,9 +31,9 @@ def site_restaurant(verified = None):
     restaurants = session.query(Restaurant)
     restaurant_headers = None
     for restaurant in restaurants:
-        add_restaurant_table = html_table_restaurant(restaurants, verified = verified, restaurant_headers = restaurant_headers)
+        add_restaurant_table = html_table_restaurant(restaurants = restaurants, verified = verified, restaurant_headers = restaurant_headers)
         output = ''
-        output += add_restaurant_table + '<p><a href=""'       
+        output += '<h3><a href="/restaurant/add">Add Restaurant</a></h3>' + add_restaurant_table      
 
     return output
 
@@ -54,15 +58,16 @@ def html_table_restaurant(output = None, verified = None,
         output += '<th>Delete</th>'
     output += "</tr>"
     output += "<tr>"
-    for header in restaurant_headers:
-        column_data = getattr(restaurant, header)
-        output += "<td>{}</td>".format(column_data)
+    for restaurant in restaurants:
+        for header in restaurant_headers:
+            column_data = getattr(restaurant, header)
+            output += "<td>{}</td>".format(column_data)
         if verified is True:
-            edit_path = "edit"
-            delete_path = "delete"
-            output += '<td><a href="{}"}>Edit</a></td>'.format(edit_path)
-            output += '<td><a href="{}"}>Delete</a></td>'.format(delete_path)
-    output += "</tr>"
+            edit_path = "/restaurant/{}/edit".format(restaurant.id)
+            delete_path = "/restaurant/{}/delete".format(restaurant.id)
+            output += '<td><a href="{}">Edit</a></td>'.format(edit_path)
+            output += '<td><a href="{}">Delete</a></td>'.format(delete_path)
+        output += "</tr>"
     output += "</table>"
     output += "<br>"
     return output
