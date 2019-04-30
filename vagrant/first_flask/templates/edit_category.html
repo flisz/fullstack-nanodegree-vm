@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}Add Restaurant{% endblock %}
+{% block title %}Edit {{restaurant.name}}{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
   <h2>
-    {{restaurant.name}}: (#{{ restaurant.id}}):
+    Editing Restaurant (#{{ restaurant.id}}): {{restaurant.name}} 
   </h2>
   <h4>
   	<a href="/restaurant"> Restaurants </a>

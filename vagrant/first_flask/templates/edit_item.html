@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Edit Item{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>
+  	Edit Menu Item: {{menu_item.name}}: 
+  </h2>
+  <h4>
+  	<a href="/restaurant"> Home </a>
+    <a href="/restaurant/{{ restaurant.id }}/menu"> | Menu </a>
+  </h4>
+  <h3>Restaurant: {{restaurant.name}}</h3>
+  <form method="post">
+    <table>
+    <tr><td>Name:</td><td><input type=text name=item_name></td><td>{{menu_item.name}}</td></tr>
+    <tr><td>Course</td><td><input type=text name=item_course></td><td>{{menu_item.course}}</td></tr>
+    <tr><td>Price:</td><td><input type=text name=item_price></td><td>{{menu_item.price}}</td></tr>
+    <tr><td>Description:</td><td><input type=text name=item_description></td><td>{{menu_item.description}}</td></tr>
+    </table>
+    <input type=submit value=Accept Changes>
+  </form>
+{% endblock %}

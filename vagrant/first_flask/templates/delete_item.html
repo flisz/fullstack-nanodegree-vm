@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Delete {{menu_item.name}}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>
+    Confirm Delete Item (#{{ menu_item.id}}): {{menu_item.name}} 
+  </h2>
+  <h4>
+  	<a href="/restaurant"> Home </a>
+    <a href="/restaurant/{{restaurant.id}}/menu"> | Menu </a>
+  </h4>
+  <h3>From Restaurant: {{restaurant.name}}</h3>
+  <form method="post">
+      <p><input type=submit value=Confirm>
+  </form>
+{% endblock %}
