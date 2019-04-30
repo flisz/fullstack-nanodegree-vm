@@ -54,20 +54,19 @@ def restaurant_menu(restaurant_id):
 
 @app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET','POST'])
 def edit_restaurant(restaurant_id):
-    restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+    
     if verified is True:
-        for restaurant in restaurants:
-            if request.method == 'POST':
+        if request.method == 'POST':
+            restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+            for restaurant in restaurants:
                 name = request.form['restaurant_name']
                 restaurant.name = name
-                session.commit()
-            if request.method == 'GET':
-                main_path = '/restaurant'
-                output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
-                add_content = html_edit_restaurant(restaurant, verified)
-                output += add_content
-                return output
-    return redirect("/restaurant".format(restaurant.id))
+            session.commit()
+        elif request.method == 'GET':
+            restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+            for restaurant in restaurants:
+                return render_template('edit_category.html', verified = verified, restaurant=restaurant)
+    return redirect("/restaurant")
 
 
 def html_edit_restaurant(restaurant,verified):
