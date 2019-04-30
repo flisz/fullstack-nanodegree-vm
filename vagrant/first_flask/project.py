@@ -68,22 +68,6 @@ def edit_restaurant(restaurant_id):
     return redirect("/restaurant")
 
 
-def html_edit_restaurant(restaurant,verified):
-    if verified is True:
-        return '''
-            <h2>Edit Restaurant:{} (#{})</h2> 
-            <form method="post">
-                <p>Name:<input type=text name=restaurant_name>
-                <p><input type=submit value=Submit>
-            </form>
-            <p><a href="/restaurant/{}/menu">To Menu</a><p>
-            <p><a href="/restaurant/{}/menu/add">Add Menu Items</a><p>
-            <p><a href="/restaurant">Back to Restaurants</a><p>
-        '''.format(restaurant.name, restaurant.id, restaurant.id, restaurant.id)
-    else:
-        return redirect("/restaurant/{}/menu".format(restaurant.id))
-
-
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET','POST'])
 def delete_restaurant(restaurant_id):
     if verified is True:
@@ -105,8 +89,9 @@ def delete_restaurant(restaurant_id):
 @app.route('/restaurant/<int:restaurant_id>/menu/add', methods=['GET','POST'])
 def restaurant_add_menu_items(restaurant_id):
     if verified is True:
-        if request.method == 'POST':
-            for restaurant in restaurants:
+        restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
+        for restaurant in restaurants:
+            if request.method == 'POST':
                 menu_item = MenuItem()
                 menu_item.restaurant = restaurant
                 if request.form.get('item_name','') != '':
@@ -118,10 +103,8 @@ def restaurant_add_menu_items(restaurant_id):
                 if request.form.get('item_course','') != '':
                     menu_item.course = request.form['item_course']
                 session.add(menu_item)
-            session.commit()
-        elif request.method == 'GET':
-            restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
-            for restaurant in restaurants:
+                session.commit()
+            elif request.method == 'GET':
                 return render_template('add_item.html', restaurant=restaurant)
     return redirect("/restaurant/{}/menu".format(restaurant_id))
 
