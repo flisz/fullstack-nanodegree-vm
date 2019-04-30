@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h3><a href="{{ url_for('templates',filename='add_category.html') }}">Add Restaurant</a></h3>
+  <table>
+    <tr>
+    <th>Name</th>
+    <th>Menu</th>
+    {% if verified is True %}
+        <th>Edit</th>'
+        <th>Delete</th>'
+    {% endif %}
+    </tr>
+    {% for restaurant in restaurants %}
+        <tr>
+        <td>{{ restaurant.name }}</td>
+        <td><a href="{{ url_for('templates',filename='category.html') }}">Menu</a></td>
+        {% if verified is True %}
+            <td><a href="{{ url_for('templates',filename='edit_category.html') }}">Edit</a></td>
+            <td><a href="{{ url_for('templates',filename='delete_category.html') }}">Delete</a></td>
+        </tr>"
+    </table>"
+    <br>"
+{% endblock %}
