@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}{{ restaurant.name }}Menu{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>{{restaurant.name}}: (#{{ restaurant.id}}):
+  </h2>
+  {% if verified == True %}
+  	<h4>
+    	<a href="/restaurant/{{ restaurant.id }}/edit"> Edit </a>
+    	<a href="/restaurant/{{ restaurant.id }}/delete"> | Delete </a>
+    	<a href="/restaurant/{{ restaurant.id }}/menu/add"> | Add Menu Item </a>
+  	</h4>
+  {% endif %}
+  <h3>Menu:</h3>
+  <table>
+    <tr>
+    <th>Name</th>
+    <th>Course</th>
+    <th>Description</th>
+    <th>Price</th>
+    {% if verified == True %}
+        <th>Edit</th>
+        <th>Delete</th>
+    {% endif %}
+    </tr>
+    {% for menu_item in menu_items %}
+        <tr>
+        <td>{{ menu_item.name }}</td>
+        <td>{{ menu_item.course }}</td>
+        <td>{{ menu_item.description }}</td>
+        <td>{{ menu_item.price }}</td>
+        {% if verified == True %}
+            <td><a href="/restaurant/{{ restaurant.id }}/{{ menu_item.id }}/edit">Edit</a></td>
+            <td><a href="/restaurant/{{ restaurant.id }}/{{ menu_item.id }}/delete">Delete</a></td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+    <br>
+{% endblock %}

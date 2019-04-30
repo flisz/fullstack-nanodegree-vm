@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Add Restaurant{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>
+  	Add New Restaurant: 
+  </h2>
+  <h4>
+  	<a href="/restaurant"> (Back) </a>
+  </h4>
+  <form method="post">
+      <p>Name:<input type=text name=restaurant_name>
+      <p><input type=submit value=Add>
+  </form>
+{% endblock %}
