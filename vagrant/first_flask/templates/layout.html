@@ -4,7 +4,7 @@
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>{% block title %}{% endblock %} - Restaurants</title>
-    <a href="{{ url_for('templates', filename='index.html') }}"> Restaurant Listings </a>
+    <h1><a href="/restaurant"> Restaurant Listings </a></h1>
     {% endblock %}
   </head>
   <body>

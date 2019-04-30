@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template, url_for
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -22,60 +22,11 @@ def restaurants_redirect():
 @app.route('/restaurant/', methods=['GET'])
 @app.route('/restaurant', methods=['GET'])
 def restaurants():
-    restaurants = session.query(Restaurant)
-    main_path = '/restaurant'
-    output = '<h1><a href="{}"> Restaurant Listings </a></h1>'.format(main_path)
-    add_content = site_restaurant(verified)    
-    output += add_content
-    return output
-
-
-def site_restaurant(verified = None):
-    restaurants = session.query(Restaurant)
-    restaurant_headers = None
-    for restaurant in restaurants:
-        add_restaurant_table = html_table_restaurant(restaurants = restaurants, verified = verified, restaurant_headers = restaurant_headers)
-        output = ''
-        output += '<h3><a href="/restaurant/add">Add Restaurant</a></h3>' + add_restaurant_table      
-
-    return output
-
-
-def html_table_restaurant(output = None, verified = None, 
-                          restaurants = None, restaurant_headers = None, restaurant_id = None,  
-                          menu_items = None, menu_item_headers = None, menu_item_id = None):
-    if output is None: 
-        output = ''
-    if restaurants is None:
-        restaurants = session.query(Restaurant)
-    if restaurant_headers is None:
-        restaurant_headers = Restaurant.__table__.columns.keys()
-
-    output += "<table>"
-    output += "<tr>"
-    for header in restaurant_headers:
-        output += "<th>{}</th>".format(header)
-    output += '<th>Menu</th>'
-    if verified is True:
-        output += '<th>Edit</th>'
-        output += '<th>Delete</th>'
-    output += "</tr>"
-    output += "<tr>"
-    for restaurant in restaurants:
-        for header in restaurant_headers:
-            column_data = getattr(restaurant, header)
-            output += "<td>{}</td>".format(column_data)
-        menu_path = "/restaurant/{}/menu".format(restaurant.id)
-        output += '<td><a href="{}">Menu</a></td>'.format(menu_path)
-        if verified is True:
-            edit_path = "/restaurant/{}/edit".format(restaurant.id)
-            delete_path = "/restaurant/{}/delete".format(restaurant.id)
-            output += '<td><a href="{}">Edit</a></td>'.format(edit_path)
-            output += '<td><a href="{}">Delete</a></td>'.format(delete_path)
-        output += "</tr>"
-    output += "</table>"
-    output += "<br>"
-    return output
+    restaurant_count = session.query(Restaurant).count()
+    print(restaurant_count)
+    limit = 10
+    restaurants = session.query(Restaurant).order_by(Restaurant.last_time.desc()).limit(limit)
+    return render_template('index.html', verified = verified, restaurants=restaurants)
 
 
 @app.route('/restaurant/add', methods=['GET','POST'])
