@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, url_for
+from flask import Flask, request, redirect, render_template, url_for, flash
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -37,6 +37,7 @@ def add_restaurant():
         restaurant.name = name
         session.add(restaurant)
         session.commit()
+        flash("new restaurant created")
         return redirect("/restaurant")
     elif request.method == 'GET':
         return render_template('add_category.html', verified = verified)
@@ -61,6 +62,7 @@ def edit_restaurant(restaurant_id):
                 name = request.form['restaurant_name']
                 restaurant.name = name
             session.commit()
+            flash("restaurant edited")
         elif request.method == 'GET':
             restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
             for restaurant in restaurants:
@@ -79,6 +81,7 @@ def delete_restaurant(restaurant_id):
                     session.delete(menu_item)
                 session.delete(restaurant)
                 session.commit()
+                flash("restaurant deleted")
         elif request.method == 'GET':
             restaurants = session.query(Restaurant).filter(Restaurant.id==restaurant_id)
             for restaurant in restaurants:
@@ -104,6 +107,7 @@ def restaurant_add_menu_items(restaurant_id):
                     menu_item.course = request.form['item_course']
                 session.add(menu_item)
                 session.commit()
+                flash("new item created")
             elif request.method == 'GET':
                 return render_template('add_item.html', restaurant=restaurant)
     return redirect("/restaurant/{}/menu".format(restaurant_id))
@@ -127,6 +131,7 @@ def edit_menu_item(restaurant_id, menu_item_id):
                     if request.form.get('item_course','') != '':
                         menu_item.course = request.form['item_course']
                     session.commit()
+                    flash("item edited")
                 elif request.method == 'GET':
                     return render_template('edit_item.html', restaurant = restaurant, menu_item = menu_item)
     return redirect("/restaurant/{}/menu".format(restaurant.id))
@@ -144,9 +149,11 @@ def delete_menu_items(restaurant_id, menu_item_id):
                 elif request.method == 'GET':
                     return render_template('delete_item.html', restaurant = restaurant, menu_item = menu_item)
             session.commit()
+            flash("item deleted")
     return redirect( "/restaurant/{}/menu".format(restaurant.id))
 
 
 if __name__ == '__main__':
     verified = True
+    app.secret_key = 'super_secret'
     app.run(host='0.0.0.0', port=5000)

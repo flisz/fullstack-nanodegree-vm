@@ -12,6 +12,15 @@
   		<a href="/restaurant/add">Add New</a>
   	{% endif %}
   </h4>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li><strong> {{ message }} </strong></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
   <table>
     <tr>
     <th>Name</th>
