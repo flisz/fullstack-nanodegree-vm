@@ -9,6 +9,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
+from sqlalchemy_utils import dependent_objects
+
 from config import SQL_COMMAND
 
 
@@ -28,6 +30,19 @@ class Restaurant(Base):
     __tablename__ = 'restaurant'
     name = Column(String(80), nullable=False)
 
+    @property
+    def serialize(self):
+        Dependents = list(
+            dependent.serialize for dependent in dependent_objects(self)
+            )
+        print(Dependents)
+        return {
+            'name' : self.name,
+            'id' : self.id,
+            'menu' : Dependents
+        }
+
+
 
 class MenuItem(Base):
     __tablename__ = 'menu_item'
@@ -37,6 +52,16 @@ class MenuItem(Base):
     price = Column(String(8))
     restaurant_id = Column( Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
+
+    @property
+    def serialize(self):
+        return {
+            'name' : self.name,
+            'description' : self.description,
+            'id' : self.id,
+            'price' : self.price,
+            'course': self.course
+        }
 
 
 engine = create_engine(SQL_COMMAND)

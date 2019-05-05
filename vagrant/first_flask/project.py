@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, url_for, flash
+from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -15,18 +15,28 @@ session = DBSessionMaker()
 
 verified = False
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/', methods=['GET'])
 def restaurants_redirect():
     return redirect("/restaurant")
 
 @app.route('/restaurant/', methods=['GET'])
 @app.route('/restaurant', methods=['GET'])
-def restaurants():
+def restaurant_index():
     restaurant_count = session.query(Restaurant).count()
     print(restaurant_count)
     limit = 10
     restaurants = session.query(Restaurant).order_by(Restaurant.last_time.desc()).limit(limit)
     return render_template('index.html', verified = verified, restaurants=restaurants)
+
+@app.route('/api/restaurant', methods=['GET'])
+def api_all_restaurants():
+    restaurants = session.query(Restaurant)
+    Restaurants=[i.serialize for i in restaurants]
+    return jsonify(Restaurants)
 
 
 @app.route('/restaurant/add', methods=['GET','POST'])
@@ -52,6 +62,54 @@ def restaurant_menu(restaurant_id):
         for restaurant in restaurants:
             return render_template('category.html', verified = verified, restaurant=restaurant, menu_items=menu_items)
     
+@app.route('/api/restaurant/<int:restaurant_id>/menu/', methods=['GET'])
+def api_restaurant_menu(restaurant_id):
+    restaurant_key = 'menu'
+    print('restaurant_key: {}'.format(restaurant_key))
+    restaurant = session.query(Restaurant).filter(Restaurant.id==restaurant_id).one_or_none()
+    if restaurant is None:
+        return redirect(url_for(page_not_found))
+    else:
+        restaurant_json = restaurant.serialize
+        print('restaurant_json: {}'.format(restaurant_json))
+        if restaurant_key in restaurant_json.keys():
+            return jsonify({restaurant_key: restaurant_json.get(restaurant_key)})
+        else:
+            return redirect(url_for(page_not_found))
+
+@app.route('/api/restaurant/<int:restaurant_id>/menu/<int:menu_item_id>', methods=['GET'])
+def api_restaurant_menu_item(restaurant_id, menu_item_id):
+    menu_item = menu_items = session.query(MenuItem).filter(MenuItem.id == menu_item_id).one_or_none()
+    if menu_item is None:
+        return redirect(url_for(page_not_found))
+    else:
+        menu_item_json = menu_item.serialize
+        return jsonify(menu_item_json)
+
+@app.route('/api/restaurant/<int:restaurant_id>/menu/<int:menu_item_id>/<string:item_key>', methods=['GET'])
+def api_restaurant_menu_item_details(restaurant_id, menu_item_id, item_key):
+    menu_item = menu_items = session.query(MenuItem).filter(MenuItem.id == menu_item_id).one_or_none()
+    if menu_item is None:
+        return redirect(url_for(page_not_found))
+    else:
+        menu_item_json = menu_item.serialize
+        if item_key in menu_item_json.keys():
+            return jsonify({item_key: menu_item_json.get(item_key)})
+    return redirect(url_for(page_not_found))
+
+
+@app.route('/api/restaurant/<int:restaurant_id>/<string:restaurant_key>', methods=['GET'])
+def api_restaurant_item(restaurant_id, restaurant_key):
+    print('restaurant_key: {}'.format(restaurant_key))
+    restaurant = session.query(Restaurant).filter(Restaurant.id==restaurant_id).one_or_none()
+    if restaurant is None:
+        return redirect(url_for(page_not_found))
+    else:
+        restaurant_json = restaurant.serialize
+        if restaurant_key in restaurant_json.keys():
+            return jsonify({restaurant_key: restaurant_json.get(restaurant_key)})
+        else:
+            return redirect(url_for(page_not_found))
 
 @app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET','POST'])
 def edit_restaurant(restaurant_id):
@@ -111,6 +169,7 @@ def restaurant_add_menu_items(restaurant_id):
             elif request.method == 'GET':
                 return render_template('add_item.html', restaurant=restaurant)
     return redirect("/restaurant/{}/menu".format(restaurant_id))
+
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_item_id>/edit', methods=['GET','POST'])

@@ -1,13 +1,13 @@
 body {
     font-family: sans-serif;
-    background-color: #333333
+    background-color: #1d293a
 }
 
 h1,
 h2,
 h3,
 h4 {
-    color: #ffffff;
+    color: #c9d7ed;
 }
 
 h1,
@@ -24,16 +24,27 @@ h2 {
     font-size: 1.2em;
 }
 
-p,
-dd,
-dt {
-    color: #cccccc;
+table {
+    background-color: #040d35;
+}
+
+th {
+    padding: 5px;
+    color: #ffffff;
+    font-style: bold;
+    text-decoration: underline;
+    background-color: #01061c;
+}
+
+td {
+    color: #8ea7cc;
+    padding: 2.5px;
 }
 
 a {
     text-decoration: none;
     color: #ffffcc;
-    font-size: .75em;
+    font-size: .85em;
 }
 
 .pane {
@@ -48,8 +59,8 @@ a {
 }
 
 .header {
-    left: 50%;
-    text-align: center;
+    color: #ffffcc;
+    padding: 2.5px;
 }
 
 .name {
