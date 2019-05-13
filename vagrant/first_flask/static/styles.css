@@ -69,8 +69,6 @@ a {
     float: left;
 }
 
-.description {}
-
 .price {
     text-align: right;
     width: 50%;
@@ -83,30 +81,58 @@ a {
     background: #cee5f5;
 }
 
-.centralizer {
+.centralizer-left {
     position:absolute;
     /*fixed works too*/
-    top:50vh;
-    left:50vw;
-    width:90vw;
+    top:45vh;
+    left:5vw;
+    width:30vw;
+
+    /*can be anything you want, even calc() */
+    height:80vh;
+    min-width: 200px;
+    min-height: 400px;
+    /*can be anything you want, even calc() */
+    overflow:auto;
+    /*this puts scrollers if the content inside this element is bigger then the element itself, you can remove if you want */
+    /*Here the magic begins*/
+    -webkit-transform: translateY(-50%) translateX(-5%);
+    -moz-transform: translateY(-50%) translateX(-5%);
+    -ms-transform: translateY(-50%) translateX(-5%);
+    transform: translateY(-50%) translateX(-5%);
+}
+
+.centralizer-right {
+    position:absolute;
+    /*fixed works too*/
+    top:45vh;
+    left:10vw;
+    width:30vw;
+    min-height: 400px;
+    min-width: 200px;
+
     /*can be anything you want, even calc() */
     height:80vh;
     /*can be anything you want, even calc() */
     overflow:auto;
     /*this puts scrollers if the content inside this element is bigger then the element itself, you can remove if you want */
     /*Here the magic begins*/
-    -webkit-transform: translateY(-50%) translateX(-50%);
-    -moz-transform: translateY(-50%) translateX(-50%);
-    -ms-transform: translateY(-50%) translateX(-50%);
-    transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(95%);
+    -moz-transform: translateY(-50%) translateX(95%);
+    -ms-transform: translateY(-50%) translateX(95%);
+    transform: translateY(-50%) translateX(95%);
 }
+
 .popup {
+    min-width: 200px;
+    min-height: 400px;
     background: hsla(161, 100%, 16%, 1);
     box-shadow:0 0 0 2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.3);
     border-radius:4px;
 }
 .dragger {
     background:hsla(207, 100%, 10%, 1);
+    min-height: 50px;
     height:5vh;
     border-radius:3px 3px 0 0;
     border-bottom:5px solid #ccc;
