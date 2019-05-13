@@ -29,7 +29,7 @@ table {
 }
 
 th {
-    padding: 5px;
+    padding: 3vw;
     color: #ffffff;
     font-style: bold;
     text-decoration: underline;
@@ -101,12 +101,12 @@ a {
     transform: translateY(-50%) translateX(-50%);
 }
 .popup {
-    background:white;
+    background: hsla(161, 100%, 16%, 1);
     box-shadow:0 0 0 2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.3);
     border-radius:4px;
 }
 .dragger {
-    background:#eee;
+    background:hsla(207, 100%, 10%, 1);
     height:5vh;
     border-radius:3px 3px 0 0;
     border-bottom:5px solid #ccc;
