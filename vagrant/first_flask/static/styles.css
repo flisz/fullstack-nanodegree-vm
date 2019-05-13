@@ -83,6 +83,37 @@ a {
     background: #cee5f5;
 }
 
+.centralizer {
+    position:absolute;
+    /*fixed works too*/
+    top:50vh;
+    left:50vw;
+    width:90vw;
+    /*can be anything you want, even calc() */
+    height:80vh;
+    /*can be anything you want, even calc() */
+    overflow:auto;
+    /*this puts scrollers if the content inside this element is bigger then the element itself, you can remove if you want */
+    /*Here the magic begins*/
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+}
+.popup {
+    background:white;
+    box-shadow:0 0 0 2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius:4px;
+}
+.dragger {
+    background:#eee;
+    height:5vh;
+    border-radius:3px 3px 0 0;
+    border-bottom:5px solid #ccc;
+}
+
+
+/* chevron.css */
 td {padding: 0.25vw}
      .container{        position: relative;
         max-width: 75vw;
