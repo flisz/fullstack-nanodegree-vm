@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <style>
+ 	td {padding: 0.25vw}
+     .container{ 		position: relative;
+ 		max-width: 75vw;
+     perspective: 75vw;
+     padding: 1vw;
+ 	}
+     #chevron {position: relative;
+       z-index: 1;
+       padding: 2px;
+       margin-top: 1px;
+       height: 15vw;
+       width: 20vw;
+     }
+     #chevron:before {content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 100%;
+       width: 50%;
+       background: red;
+       transform: skew(0deg, 15deg);
+     }
+     #chevron:after {content: '';
+       position: absolute;
+       top: 0;
+       right: 0;
+       height: 100%;
+       width: 50%;
+       background: red;
+       transform: skew(0deg, -15deg);
+     }
+     #side_chevron {position: relative;
+       z-index: 1;
+       text-align: center;
+       padding: 0.5vw;
+       height: 5vw;
+       width: 20vw;
+     }
+     #side_chevron:before {content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 75%;
+       width: 100%;
+       background: red;
+       transform: skew(45deg, 0deg)       	translateX(3vw);
+     }
+     #side_chevron:after {content: '';
+       position: absolute;
+       top: 75%;
+       right: 0;
+       height: 75%;
+       width: 100%;
+       background: red;
+       transform: skew(-45deg, 0deg)       	translateX(3vw);
+     }
+     .text{     position: relative;
+     text-align: center;
+     top: 30%;
+     z-index: 2;
+ }
+ </style>
+ </head>
+ <body>
+  <div class="container">
+ <table>
+ <tr>
+ <td>
+<div id="chevron">
+<div class="text">
+Paral </div>
+</div>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parall</div>
+</div>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parallelogram CSS</div>
+</div>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parallelogram CSS</div>
+</div>
+</td>
+ </tr>
+ <tr>
+ <td>
+<div id="side_chevron">
+<div class="text">
+Paral</div>
+</div>
+</td>
+ <td>
+<div id="side_chevron">
+<div class="text">
+Parall</div>
+</div>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parallelogram CSS safasd fasdf asdf asdf asdf asdf asd asdfasdfa asdf asf</div>
+</div>
+</td>
+ </tr>
+ </tr>
+ <tr>
+ <td>
+</td>
+ <td>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parallelogram CSS</div>
+</div>
+</td>
+ <td>
+<div id="chevron">
+<div class="text">
+Parallelogram CSS</div>
+</div>
+</td>
+ </tr>
+ </table>
+ </div>
+ </body>
+ </html>
+

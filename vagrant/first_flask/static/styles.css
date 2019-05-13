@@ -82,3 +82,65 @@ a {
 .flash {
     background: #cee5f5;
 }
+
+td {padding: 0.25vw}
+     .container{        position: relative;
+        max-width: 75vw;
+     perspective: 75vw;
+     padding: 1vw;
+    }
+     #chevron {position: relative;
+       z-index: 1;
+       padding: 2px;
+       margin-top: 1px;
+       height: 15vw;
+       width: 20vw;
+     }
+     #chevron:before {content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 100%;
+       width: 50%;
+       background: red;
+       transform: skew(0deg, 15deg);
+     }
+     #chevron:after {content: '';
+       position: absolute;
+       top: 0;
+       right: 0;
+       height: 100%;
+       width: 50%;
+       background: red;
+       transform: skew(0deg, -15deg);
+     }
+     #side_chevron {position: relative;
+       z-index: 1;
+       text-align: center;
+       padding: 0.5vw;
+       height: 5vw;
+       width: 20vw;
+     }
+     #side_chevron:before {content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 75%;
+       width: 100%;
+       background: red;
+       transform: skew(45deg, 0deg)         translateX(3vw);
+     }
+     #side_chevron:after {content: '';
+       position: absolute;
+       top: 75%;
+       right: 0;
+       height: 75%;
+       width: 100%;
+       background: red;
+       transform: skew(-45deg, 0deg)        translateX(3vw);
+     }
+     .text{     position: relative;
+     text-align: center;
+     top: 30%;
+     z-index: 2;
+ }

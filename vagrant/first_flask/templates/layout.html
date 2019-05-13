@@ -4,11 +4,13 @@
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>{% block title %}{% endblock %} - Restaurants</title>
-    <h1><a href="/restaurant"> Restaurant Listings </a></h1>
     {% endblock %}
   </head>
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
+    <div class="centralizer popup">
+      <div class="dragger"><h1><a href="/restaurant"> Restaurant Listings </a></h1></div>
+      <div id="content">{% block content %}{% endblock %}</div>
+    </div>
     <div id="footer">
       {% block footer %}
       {% endblock %}
