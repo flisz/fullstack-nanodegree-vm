@@ -3,6 +3,7 @@ app = Flask(__name__)
 
 from flask import session as login_session
 import random, string
+import json
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -22,7 +23,9 @@ verified = False
 def show_login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state']=state
-    return 'the current session state is {}'.format(login_session['state'])
+    oauth_dict = get_asset_oauth()
+    oauth_client_id = oauth_dict['client_id']
+    return render_template('login.html', oauth_client_id=oauth_client_id)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -219,6 +222,13 @@ def delete_menu_items(restaurant_id, menu_item_id):
             session.commit()
             flash("item deleted")
     return redirect( "/restaurant/{}/menu".format(restaurant.id))
+
+
+def get_asset_oauth():
+    file_path = './assets/oauth.json'
+    with open(file_path) as json_file:
+        oauth_dict = json.load(json_file)
+    return oauth_dict
 
 
 if __name__ == '__main__':
