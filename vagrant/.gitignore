@@ -4,5 +4,6 @@
 **/*.sublime-project
 **/.idea/**
 **/venv/**
+**/assets/oauth.json
 **/*.drawio
 vagrant/boot/**
