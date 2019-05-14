@@ -1,6 +1,9 @@
 from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
 app = Flask(__name__)
 
+from flask import session as login_session
+import random, string
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.query import Query
@@ -14,6 +17,12 @@ DBSessionMaker = sessionmaker(bind=engine)
 session = DBSessionMaker()
 
 verified = False
+
+@app.route('/login')
+def show_login():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+    login_session['state']=state
+    return 'the current session state is {}'.format(login_session['state'])
 
 @app.errorhandler(404)
 def page_not_found(e):
