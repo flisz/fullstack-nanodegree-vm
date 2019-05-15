@@ -1,38 +1,39 @@
 from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
 app = Flask(__name__)
-
-from flask import session as login_session
-import random, string
-import json
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.query import Query
-
 from config import SQL_COMMAND
 from database_setup import Restaurant, Base, MenuItem
-
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
-import httplib2
-from flask import make_response
-import requests
-
 engine = create_engine(SQL_COMMAND)
 Base.metadata.bind = engine
 DBSessionMaker = sessionmaker(bind=engine)
 session = DBSessionMaker()
 verified = False
 
+from flask import session as login_session
+import random, string
+import json
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+import httplib2
+from flask import make_response
+import requests
+CLIENT_ID = json.loads(open('client_secrets.json','r').read())['web']['client_id']
+
 
 @app.route('/gconnect', methods=['POST']) 
 def gconnect():
     print('login_session:{}'.format(login_session))
     if request.args.get('state') != login_session
-    response = make_response(json.dumps('Invalid state parameter!', 401))
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
+        # if login_session is not valid end-point
+        response = make_response(json.dumps('Invalid state parameter!', 401))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    code = request.data
+    try:
+        # make credentials from auth code
+        oauth_flow = flow_from_clientsecrets('assets/client_secrets.json')
 
 
 @app.route('/login')
