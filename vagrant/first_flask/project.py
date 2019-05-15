@@ -19,13 +19,14 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 from flask import make_response
 import requests
-CLIENT_ID = json.loads(open('client_secrets.json','r').read())['web']['client_id']
+# need to generate client_secrets and place in assets folder
+CLIENT_ID = json.loads(open('assets/client_secrets.json','r').read())['web']['client_id']
 
 
 @app.route('/gconnect', methods=['POST']) 
 def gconnect():
     print('login_session:{}'.format(login_session))
-    if request.args.get('state') != login_session
+    if request.args.get('state') != login_session:
         # if login_session is not valid end-point
         response = make_response(json.dumps('Invalid state parameter!', 401))
         response.headers['Content-Type'] = 'application/json'
@@ -34,6 +35,58 @@ def gconnect():
     try:
         # make credentials from auth code
         oauth_flow = flow_from_clientsecrets('assets/client_secrets.json')
+        oauth_flow.redirect_uri = 'postmessage'
+        credentials = oauth_flow.step2_exchange(code)
+    except FlowExchangeError:
+        response = make_response(json.dumps('Failed to upgrade the authorization code'), 401)
+        respone.headers['Content-Type'] = 'application/json'
+        return response
+    access_token = credentials.access_token
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
+    h = httplib2.Http()
+    result = hson.loads(h.request(url,'GET')[1])
+    result_error = result.get('error')
+    if result_error is not None:
+        response = make_response(json.dumps(result_error), 500)
+        response.headers['Content-Type'] = 'application/json'    
+    # verify access is for intended user
+    g_id = credentials.id_token['sub']
+    if result != g_id:
+        response = make_response(json.dumps("Token's user ID does not match given user ID"), 401)
+        response.headers['Content-Type'] = 'application/json'
+        print("g_id bad")
+        return response
+    if result['issued_to'] != CLIENT_ID:
+        response = make_response(json.dumps("Token's client ID does not match app's"))
+        print("client_id bad")
+    #user is already logged in
+    stored_credentials = login_session.get('credentials')
+    stored_gplus_id = login_session.get('gplus_id')
+    if stored_credentials is not None and gplus_id == stored_gplus_id:
+        response = make_response(json.dumps('current user already logged in'), 200)
+        response.headers['Content-Type'] = 'application/json'
+    # store access token in session for later use.
+    login_session['credentials'] = credentials
+    login_session['gplus_id'] = gplus_id
+    # get user info
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    params = {'access_token': credentials.access_token, 'alt': 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = answer.json()
+    print('\n'.join(data.split(',')))
+    login_session['username'] = data.get('name')
+    login_session['picture'] = data.get('picture')
+    login_session['email'] = data.get('email')
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    flash("you are now logged in as {}".format(login_session['username']))
+    print("done! wooo")
+    return output
 
 
 @app.route('/login')
@@ -47,6 +100,10 @@ def show_login():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html',e=e), 404
 
 @app.route('/', methods=['GET'])
 def restaurants_redirect():
