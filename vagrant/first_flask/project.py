@@ -12,6 +12,12 @@ from sqlalchemy.orm.query import Query
 from config import SQL_COMMAND
 from database_setup import Restaurant, Base, MenuItem
 
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+import httplib2
+from flask import make_response
+import requests
+
 engine = create_engine(SQL_COMMAND)
 Base.metadata.bind = engine
 DBSessionMaker = sessionmaker(bind=engine)
