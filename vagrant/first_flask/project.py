@@ -22,8 +22,18 @@ engine = create_engine(SQL_COMMAND)
 Base.metadata.bind = engine
 DBSessionMaker = sessionmaker(bind=engine)
 session = DBSessionMaker()
-
 verified = False
+
+
+@app.route('/gconnect', methods=['POST']) 
+def gconnect():
+    print('login_session:{}'.format(login_session))
+    if request.args.get('state') != login_session
+    response = make_response(json.dumps('Invalid state parameter!', 401))
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+
 
 @app.route('/login')
 def show_login():
