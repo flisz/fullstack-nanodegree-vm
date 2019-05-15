@@ -95,7 +95,7 @@ def show_login():
     login_session['state']=state
     oauth_dict = get_asset_oauth()
     oauth_client_id = oauth_dict['client_id']
-    return render_template('login.html', oauth_client_id=oauth_client_id,state=STATE)
+    return render_template('login.html', oauth_client_id=oauth_client_id,STATE=state)
 
 @app.errorhandler(404)
 def page_not_found(e):
