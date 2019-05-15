@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer> </script>
+
 <meta name="google-signin-client_id" content="{{oauth_client_id}}">
 </head>
 <body>  
         <div id="signinButton">
-          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          <div class="g-signin2" 
+          data-accesstype="offline"
+          data-cookiepolicy="single_host_origin"
+          data-onsuccess="onSignIn"
+          data-approvalprompt="force"
         </div>
+</body>
 <script>
-  function signInCallback(authResult) {
-  if (authResult['code']) {
-    // Hide the sign-in button now that the user is authorized
+  function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  
+  console.log('login-successful')
     $('#signinButton').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
 
-   $.ajax({
+    $.ajax({
       type: 'POST',
       url: '/gconnect?state={{STATE}}',
       processData: false,
@@ -31,11 +43,31 @@
           
       } else if (authResult['error']) {
     console.log('There was an error: ' + authResult['error']);
-  } else {
+    } else {
         $('#result').html('Failed to make a server-side call. Check your configuration and console.');
          }
       }
       
-  }); } }
-</body>
+  });
+  }
+
+//https://stackoverflow.com/questions/31331428/how-to-call-getbasicprofile-of-google-to-google-signin-on-only-button-click
+  function onLoad() {
+      gapi.load('auth2,signin2', function() {
+        var auth2 = gapi.auth2.init();
+        auth2.then(function() {
+          // Current values
+          var isSignedIn = auth2.isSignedIn.get();
+          var currentUser = auth2.currentUser.get();
+
+          if (!isSignedIn) {
+            // Rendering g-signin2 button.
+            gapi.signin2.render('google-signin-button', {
+              'onsuccess': 'onSignIn'  
+            });
+          }
+        });
+      });
+    }
+</script>
 </html>
