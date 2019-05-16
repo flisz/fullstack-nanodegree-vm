@@ -32,6 +32,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     code = request.data
+    print('code:{}'.format(code))
     try:
         # make credentials from auth code
         oauth_flow = flow_from_clientsecrets('assets/client_secrets.json')

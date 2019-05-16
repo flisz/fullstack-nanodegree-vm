@@ -5,5 +5,6 @@
 **/.idea/**
 **/venv/**
 **/assets/oauth.json
+**/assets/client_secrets.json
 **/*.drawio
 vagrant/boot/**

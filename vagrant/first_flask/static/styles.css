@@ -38,7 +38,7 @@ th {
 
 td {
     color: #8ea7cc;
-    padding: 2.5px;
+    padding: 1vw;
 }
 
 a {
@@ -111,7 +111,7 @@ a {
 }
 .dragger {
     background:hsla(207, 100%, 10%, 1);
-    min-height: 50px;
+    min-height: 75px;
     height:5vh;
     border-radius:3px 3px 0 0;
     border-bottom:5px solid #ccc;
