@@ -16,6 +16,10 @@ import random, string
 import json
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 import httplib2
 from flask import make_response
 import requests
@@ -27,7 +31,7 @@ CLIENT_ID = json.loads(open('assets/client_secrets.json','r').read())['web']['cl
 def gconnect():
     login_state = login_session.get('state')
     print('login_session:{}'.format(login_state))
-    data = request.data
+    data = json.loads(request.data.decode("utf-8"))
     print('request.data={}'.format(data))
     response_state = request.args.get('state')
     print('response_state:{}'.format(response_state))
@@ -37,9 +41,9 @@ def gconnect():
         response = make_response(json.dumps('Invalid state parameter!', 401))
         response.headers['Content-Type'] = 'application/json'
         return response
-    code = request.data
-    print('code:{}'.format(code))
-    try:
+    token = data.get('id_token')
+    print('token:{}'.format(token))
+    '''try:
         # make credentials from auth code
         oauth_flow = flow_from_clientsecrets('assets/client_secrets.json', scope=[])
         oauth_flow.redirect_uri = 'postmessage'
@@ -53,17 +57,41 @@ def gconnect():
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
     h = httplib2.Http()
-    result = hson.loads(h.request(url,'GET')[1])
+    result = json.loads(h.request(url,'GET')[1].decode("utf-8"))
+    print('result:{}'.format(result))
     result_error = result.get('error')
     if result_error is not None:
         response = make_response(json.dumps(result_error), 500)
-        response.headers['Content-Type'] = 'application/json'    
+        response.headers['Content-Type'] = 'application/json' '''    
     # verify access is for intended user
-    g_id = credentials.id_token['sub']
-    if result != g_id:
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        verify_id_token_request = requests.Request()
+        idinfo = id_token.verify_oauth2_token(token, verify_id_token_request, CLIENT_ID)
+
+        # Or, if multiple clients access the backend server:
+        # idinfo = id_token.verify_oauth2_token(token, requests.Request())
+        # if idinfo['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
+        #     raise ValueError('Could not verify audience.')
+
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+
+        # If auth request is from a G Suite domain:
+        # if idinfo['hd'] != GSUITE_DOMAIN_NAME:
+        #     raise ValueError('Wrong hosted domain.')
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        user_id = idinfo['sub']
+        print("user_id:{}".format(user_id))
+    except ValueError:
+        print("Invalid Token!!!")
+        pass
+    # user_id = credentials.id_token['sub']
+    if result != user_id:
         response = make_response(json.dumps("Token's user ID does not match given user ID"), 401)
         response.headers['Content-Type'] = 'application/json'
-        print("g_id bad")
+        print("user_id bad")
         return response
     if result['issued_to'] != CLIENT_ID:
         response = make_response(json.dumps("Token's client ID does not match app's"))
@@ -75,11 +103,11 @@ def gconnect():
         response = make_response(json.dumps('current user already logged in'), 200)
         response.headers['Content-Type'] = 'application/json'
     # store access token in session for later use.
-    login_session['credentials'] = credentials
+    login_session['access_token'] = access_token
     login_session['gplus_id'] = gplus_id
     # get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-    params = {'access_token': credentials.access_token, 'alt': 'json'}
+    params = {'access_token': access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
     print('\n'.join(data.split(',')))
