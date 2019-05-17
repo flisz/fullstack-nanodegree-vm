@@ -25,9 +25,15 @@ CLIENT_ID = json.loads(open('assets/client_secrets.json','r').read())['web']['cl
 
 @app.route('/gconnect', methods=['POST']) 
 def gconnect():
-    print('login_session:{}'.format(login_session))
-    if request.args.get('state') != login_session:
+    login_state = login_session.get('state')
+    print('login_session:{}'.format(login_state))
+    data = request.data
+    print('request.data={}'.format(data))
+    response_state = request.args.get('state')
+    print('response_state:{}'.format(response_state))
+    if response_state != login_state:
         # if login_session is not valid end-point
+        print('state does not match!')
         response = make_response(json.dumps('Invalid state parameter!', 401))
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -35,12 +41,14 @@ def gconnect():
     print('code:{}'.format(code))
     try:
         # make credentials from auth code
-        oauth_flow = flow_from_clientsecrets('assets/client_secrets.json')
+        oauth_flow = flow_from_clientsecrets('assets/client_secrets.json', scope=[])
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
+        print("credentials: {}".format(credentials))
     except FlowExchangeError:
+        print('FlowExchangeError')
         response = make_response(json.dumps('Failed to upgrade the authorization code'), 401)
-        respone.headers['Content-Type'] = 'application/json'
+        response.headers['Content-Type'] = 'application/json'
         return response
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
