@@ -1,6 +1,13 @@
 **/*.db
 **/*.sql
 **/*.pyc
-**/**/**/*.sublime-workspace
+**/*.sublime-workspace
+**/__pycache__/**
+**/.vagrant
+**/*.sublime-project
+**/.idea/**
+**/venv/**
+**/assets/*.json
+**/*.drawio
 vagrant/boot/**
-*.sublime-workspace
+vagrant/*.log
