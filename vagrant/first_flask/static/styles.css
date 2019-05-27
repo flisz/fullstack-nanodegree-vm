@@ -1,19 +1,20 @@
 body {
     font-family: sans-serif;
-    background-color: #1d293a
+    background-color: #1d293a;
 }
 
 h1,
 h2,
 h3,
 h4 {
-    color: #c9d7ed;
+    margin-top:1px;
+    margin-bottom:1px;
+    color: #DEFEFC !important;
 }
 
 h1,
 h2 {
     font-family: 'georgia', serif;
-    margin: 0;
 }
 
 h1 {
@@ -47,20 +48,8 @@ a {
     font-size: .85em;
 }
 
-.pane {
-    position: absolute;
-    left: 25%;
-    border: 2px solid;
-    border-radius: 25px;
-    padding: 5px;
-    margin: 5px;
-    border-color: #999999;
-    background-color: #333333
-}
-
 .header {
     color: #ffffcc;
-    padding: 2.5px;
 }
 
 .name {
@@ -81,19 +70,27 @@ a {
     background: #cee5f5;
 }
 
+.user-icon{
+  float:right;
+  width:40px;
+  height:40px;
+}
+
+
+
 .centralizer {
     position:absolute;
     /*fixed works too*/
-    top:45vh;
+    top:42vh;
     left:50vw;
-    width:90vw;
+    width:97vw;
 
     /*can be anything you want, even calc() */
     height:80vh;
     min-width: 800px;
     min-height: 400px;
     /*can be anything you want, even calc() */
-    overflow:auto;
+    /*overflow:auto
     /*this puts scrollers if the content inside this element is bigger then the element itself, you can remove if you want */
     /*Here the magic begins*/
     -webkit-transform: translateY(-50%) translateX(-50%);
@@ -116,11 +113,13 @@ a {
     border-radius:3px 3px 0 0;
     border-bottom:5px solid #ccc;
 }
-
+.row{
+  margin-right: 0px;
+  margin-left: 0px;
+}
 
 /* chevron.css */
-td {padding: 0.25vw}
-     .container{        position: relative;
+.container{        position: relative;
         max-width: 75vw;
      perspective: 75vw;
      padding: 1vw;

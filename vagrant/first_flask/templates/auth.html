@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://apis.google.com/js/platform.js?onload=gAPI_init" async defer> </script>
+</head>
+<body>
+	<h3><div class = "row login-banner">
+		{% if login_session.get('access_token') %}
+			<div class = "col-xs-offset-1 col-xs-3 border ">
+				<img src="{{login_session.get('picture')}}" class="user-icon img-circle" alt="{{login_session.get('username')}}">
+			</div>
+		{% else %}
+			<div class = "col-xs-offset-4 border "></div>
+		{% endif %}
+			<div class = "auth col-xs-8 border">
+				<div id="google-signout-button">
+					<a href="#" onclick="gAPI_signOut();">Sign out</a>
+				</div>
+				<div id="google-signin-button">
+					<div class="g-signin2" 
+						data-accesstype="offline"
+						data-cookiepolicy="single_host_origin"
+						data-onsuccess="gAPI_onSignIn"
+						data-approvalprompt="force">
+					</div>
+				</div>
+			</div>	
+	</div></h3>
+
+<script>
+function gAPI_signOut() {
+	var googleAuth = gapi.auth2.getAuthInstance();
+		googleAuth.signOut().then(function () {
+		console.log('User signed out.');
+		}
+	);
+}
+
+function gAPI_init() {
+	console.log("onloading!");
+	gapi.load("client:auth2",
+		function() {
+			var CLIENT_ID = '{{login_session.get("oauth_client_id")}}'
+			var params = {
+				'client_id' : CLIENT_ID,
+				};
+			console.log(params);
+			var googleAuth = gapi.client.init(params);
+			console.log(googleAuth);
+			googleAuth.then(
+				function() {
+					// Current values
+					var isSignedIn = auth2.isSignedIn.get();
+					var currentUser = auth2.currentUser.get();
+					console.log(isSignedIn);
+					console.log(currentUser);
+					if (!isSignedIn) {
+						// Rendering g-signin2 button.
+						$('#google-signin-button').attr('style', 'display: block');
+						$('#google-signout-button').attr('style', 'display: none');
+					} else {
+						$('#google-signin-button').attr('style', 'display: none');
+						$('#google-signout-button').attr('style', 'display: block');
+					}
+				}
+			);
+		}				
+	);
+}
+
+function gAPI_onSignIn() {
+	googleUser = googleAuth.currentUser.get()
+	var id_token = googleUser.getAuthResponse().id_token;
+	var send_this = {
+		'id_token' : id_token,
+	}
+	if (id_token) {
+		$('#signinButton').attr('style', 'display: none');
+		$.ajax(
+			{
+				type: 'POST',
+				url: '/gconnect?state={{login_session.get("state")}}',
+				processData: false,
+				data: JSON.stringify(send_this),
+				contentType: 'application/json; charset=utf-8',
+				success: function(result) {
+					console.log("result:"+result)
+					if (result) {
+						$('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+			 			setTimeout(
+			 				function() {
+								window.location.href = "/login";
+			 				}, 
+			 				4000
+			 			);
+					}
+				}
+			} 
+		); 
+	}
+}
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
+from flask import make_response
 app = Flask(__name__)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -18,17 +19,25 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
 from google.oauth2 import id_token
-from google.auth.transport import requests
-
+import google.auth.transport.requests
+import requests 
 import httplib2
-from flask import make_response
-import requests
+
+
 # need to generate client_secrets and place in assets folder
 CLIENT_ID = json.loads(open('assets/client_secrets.json','r').read())['web']['client_id']
 
 
-@app.route('/gconnect', methods=['POST']) 
-def gconnect():
+def get_asset_oauth():
+    # need to generate oauth on XX similar to assets/oauth_template.json and place in assets folder
+    file_path = './assets/oauth.json'
+    with open(file_path) as json_file:
+        oauth_dict = json.load(json_file)
+    return oauth_dict
+
+
+@app.route('/google-connect', methods=['POST']) 
+def google_connect():
     login_state = login_session.get('state')
     print('login_session:{}'.format(login_state))
     data = json.loads(request.data.decode("utf-8"))
@@ -38,11 +47,12 @@ def gconnect():
     if response_state != login_state:
         # if login_session is not valid end-point
         print('state does not match!')
-        response = make_response(json.dumps('Invalid state parameter!', 401))
+        response = make_response(json.dumps('Invalid state parameter!'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    token = data.get('id_token')
-    print('token:{}'.format(token))
+    access_token = data.get('id_token')
+    print('access_token:{}'.format(access_token))
+    print("CLIENT_ID:{}".format(CLIENT_ID))
     '''try:
         # make credentials from auth code
         oauth_flow = flow_from_clientsecrets('assets/client_secrets.json', scope=[])
@@ -55,92 +65,124 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
+    '''
+    url = ('https://oauth2.googleapis.com/tokeninfo?id_token={}'.format(access_token))
     h = httplib2.Http()
     result = json.loads(h.request(url,'GET')[1].decode("utf-8"))
     print('result:{}'.format(result))
     result_error = result.get('error')
     if result_error is not None:
         response = make_response(json.dumps(result_error), 500)
-        response.headers['Content-Type'] = 'application/json' '''    
+        response.headers['Content-Type'] = 'application/json'
+
     # verify access is for intended user
     try:
         # Specify the CLIENT_ID of the app that accesses the backend:
-        verify_id_token_request = requests.Request()
-        idinfo = id_token.verify_oauth2_token(token, verify_id_token_request, CLIENT_ID)
+        google_auth_request = google.auth.transport.requests.Request()
+        print("google_auth_request:{}".format(google_auth_request))
+        id_info = id_token.verify_oauth2_token(access_token, google_auth_request, CLIENT_ID)
+        print("id_info:{}".format(id_info))
 
         # Or, if multiple clients access the backend server:
-        # idinfo = id_token.verify_oauth2_token(token, requests.Request())
-        # if idinfo['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
+        # id_info = id_token.verify_oauth2_token(token, google_auth_request)
+        # if id_info['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
         #     raise ValueError('Could not verify audience.')
 
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
         # If auth request is from a G Suite domain:
-        # if idinfo['hd'] != GSUITE_DOMAIN_NAME:
+        # if id_info['hd'] != GSUITE_DOMAIN_NAME:
         #     raise ValueError('Wrong hosted domain.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
-        user_id = idinfo['sub']
+        user_id = id_info['sub']
         print("user_id:{}".format(user_id))
     except ValueError:
+        
         print("Invalid Token!!!")
         pass
-    # user_id = credentials.id_token['sub']
-    if result != user_id:
-        response = make_response(json.dumps("Token's user ID does not match given user ID"), 401)
+
+    if result['sub'] != user_id:
+        authentication_error_message = "Token's user ID does not match given user ID"
+        response = make_response(json.dumps(authentication_error_message), 401)
         response.headers['Content-Type'] = 'application/json'
-        print("user_id bad")
+        print(authentication_error_message)
         return response
-    if result['issued_to'] != CLIENT_ID:
-        response = make_response(json.dumps("Token's client ID does not match app's"))
-        print("client_id bad")
-    #user is already logged in
-    stored_credentials = login_session.get('credentials')
-    stored_gplus_id = login_session.get('gplus_id')
-    if stored_credentials is not None and gplus_id == stored_gplus_id:
+    if result['azp'] != CLIENT_ID:
+        authentication_error_message = "Token's client ID does not match app's"
+        response = make_response(json.dumps(authentication_error_message), 401)
+        print(authentication_error_message)
+        return response
+    
+    stored_user_id = login_session.get('user_id')
+    stored_access_token = login_session.get('access_token')
+    if stored_access_token is not None and user_id == stored_user_id:
+        # user is already logged in
         response = make_response(json.dumps('current user already logged in'), 200)
         response.headers['Content-Type'] = 'application/json'
-    # store access token in session for later use.
+        return response
+
+    # new user just logged in. save in session for future use
     login_session['access_token'] = access_token
-    login_session['gplus_id'] = gplus_id
-    # get user info
-    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-    params = {'access_token': access_token, 'alt': 'json'}
-    answer = requests.get(userinfo_url, params=params)
-    data = answer.json()
-    print('\n'.join(data.split(',')))
-    login_session['username'] = data.get('name')
-    login_session['picture'] = data.get('picture')
-    login_session['email'] = data.get('email')
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as {}".format(login_session['username']))
-    print("done! wooo")
-    return output
+    login_session['user_id'] = user_id
+    login_session['username'] = id_info.get('name')
+    login_session['picture'] = id_info.get('picture')
+    login_session['email'] = id_info.get('email')
+    print("new login_session started: {}".format(login_session))
+    return redirect("/login")
 
+@app.route('/google-disconnect', methods=['POST']) 
+def google_disconnect():
+    login_state = login_session.get('state')
+    print('login_session:{}'.format(login_state))
+    data = json.loads(request.data.decode("utf-8"))
+    print('request.data={}'.format(data))
+    response_state = request.args.get('state')
+    print('response_state:{}'.format(response_state))
+    if response_state != login_state:
+        # if login_session is not valid end-point
+        print('state does not match! (invalid disconnect request?)')
+        response = make_response(json.dumps('Invalid state parameter!'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        new_login_session()
+        return response
+    else: 
+        new_login_session()
+        return redirect("/login")
 
-@app.route('/login')
-def show_login():
+def new_login_session():
+    for key in list(login_session.keys()):
+        login_session.pop(key)
+    print("login_session cleared: {}".format(login_session))
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state']=state
     oauth_dict = get_asset_oauth()
-    oauth_client_id = oauth_dict['client_id']
-    return render_template('login.html', oauth_client_id=oauth_client_id,STATE=state)
+    login_session['oauth_client_id'] = oauth_dict['client_id'] 
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def show_login():
+    if request.method == 'POST':
+        print("request.form:{}".format(request.form))
+        new_login_session()
+        return redirect("/login")
+    elif request.method == 'GET':
+        if login_session.get('access_token'):
+            print('User is logged into login_session: {}!'.format(login_session))
+        else:
+            new_login_session()
+            print('No user is logged into login_session: {}!'.format(login_session))
+        # in this case, server is the client for id provided by oauth service (google)
+        return render_template('login.html', login_session=login_session)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('404.html', login_session=login_session, e=e), 404
 
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('500.html',e=e), 404
+    return render_template('500.html', login_session=login_session, e=e), 500
 
 @app.route('/', methods=['GET'])
 def restaurants_redirect():
@@ -335,11 +377,7 @@ def delete_menu_items(restaurant_id, menu_item_id):
     return redirect( "/restaurant/{}/menu".format(restaurant.id))
 
 
-def get_asset_oauth():
-    file_path = './assets/oauth.json'
-    with open(file_path) as json_file:
-        oauth_dict = json.load(json_file)
-    return oauth_dict
+
 
 
 if __name__ == '__main__':

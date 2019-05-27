@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer> </script>
+
+<meta name="google-signin-client_id" content="{{login_session.get('oauth_client_id')}}">
+</head>
+<body >  
+        <div id="signinButton">
+          <div class="g-signin2" 
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-onsuccess="onSignIn"
+            data-approvalprompt="force">
+          </div>
+        </div>
+</body>
+<!-- -->
+<script>
+  function onSignIn(googleUser) {
+  var id_token = googleUser.getAuthResponse().id_token;
+  var send_this = {
+    'id_token' : id_token,
+  }
+  if (id_token) {
+    // Hide the sign-in button now that the user is authorized
+    $('#signinButton').attr('style', 'display: none');
+    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{login_session.get("state")}}',
+      processData: false,
+      data: JSON.stringify(send_this),
+      contentType: 'application/json; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response if necessary.
+        console.log("result:"+result)
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+         setTimeout(function() {
+          window.location.href = "/login";
+         }, 4000);
+          
+      } /*else if (authResult['error']) {
+      console.log('There was an error: ' + authResult['error']);
+      } else {
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+         }*/
+      }
+      }); } }
+
+  //https://stackoverflow.com/questions/31331428/how-to-call-getbasicprofile-of-google-to-google-signin-on-only-button-click
+  
+  
+
+  // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+</script>
+</html>
