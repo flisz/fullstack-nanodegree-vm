@@ -15,18 +15,20 @@ verified = False
 from flask import session as login_session
 import random, string
 import json
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
+import time
 
 from google.oauth2 import id_token
+import google.oauth2.credentials
 import google.auth.transport.requests
+
 import requests 
 import httplib2
 
 
 # need to generate client_secrets and place in assets folder
 CLIENT_ID = json.loads(open('assets/client_secrets.json','r').read())['web']['client_id']
-
+CLIENT_SECRET = json.loads(open('assets/client_secrets.json','r').read())['web']['client_secret']
+id_info = {}
 
 def get_asset_oauth():
     # need to generate oauth on XX similar to assets/oauth_template.json and place in assets folder
@@ -46,26 +48,63 @@ def google_connect():
     print('response_state:{}'.format(response_state))
     if response_state != login_state:
         # if login_session is not valid end-point
-        print('state does not match!')
+        print('state mismatch\nlogin_session state: {} \n connect state: {}'.format(login_state, response_state))
         response = make_response(json.dumps('Invalid state parameter!'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = data.get('id_token')
     print('access_token:{}'.format(access_token))
     print("CLIENT_ID:{}".format(CLIENT_ID))
-    '''try:
-        # make credentials from auth code
-        oauth_flow = flow_from_clientsecrets('assets/client_secrets.json', scope=[])
-        oauth_flow.redirect_uri = 'postmessage'
-        credentials = oauth_flow.step2_exchange(code)
+    try:
+        # make credentials from auth code ----- not used in this project.
+        credentials = google.oauth2.credentials.Credentials(access_token)
         print("credentials: {}".format(credentials))
-    except FlowExchangeError:
-        print('FlowExchangeError')
+    except Exception as e:
+        print('Exception while generating credentials: {}'.format(e))
         response = make_response(json.dumps('Failed to upgrade the authorization code'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = credentials.access_token
-    '''
+    
+    # verify access is for intended user
+    global id_info
+    print('id_info: {}'.format(id_info))
+    # to avoid hitting the exception    
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        google_auth_request = google.auth.transport.requests.Request()
+        print("google_auth_request:{}".format(google_auth_request))
+        new_id_info = id_token.verify_oauth2_token(access_token, google_auth_request, CLIENT_ID)
+        id_info = new_id_info
+    except ValueError as e:
+        exception_message = str(e)
+        print("Exception while verifying oauth2 token: {}".format(exception_message))
+        if ('Token used too early' in exception_message):
+            login_session['expires_at'] = exception_message.split()[-1]
+
+    if len(id_info) == 0:
+        error_message = "id_info not captured and accessed too often, \
+                         wait until after {} and retry".format(login_session.get('expires_at'))
+        response = make_response(json.dumps(error_message), 401)
+        response.headers['Content-Type'] = 'application/json'
+        print(authentication_error_message)
+        return response
+    else:
+        try:
+            print("id_info:{}".format(id_info))
+
+            # Or, if multiple clients access the backend server:
+            # id_info = id_token.verify_oauth2_token(token, google_auth_request)
+            # if id_info['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
+            #     raise ValueError('Could not verify audience.')
+
+            if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+            user_id = id_info['sub']
+            print("user_id:{}".format(user_id))
+        except ValueError as e:
+                print("Exception while verifying oauth2 token: {}".format(e))
+
+    #verify id token
     url = ('https://oauth2.googleapis.com/tokeninfo?id_token={}'.format(access_token))
     h = httplib2.Http()
     result = json.loads(h.request(url,'GET')[1].decode("utf-8"))
@@ -75,53 +114,27 @@ def google_connect():
         response = make_response(json.dumps(result_error), 500)
         response.headers['Content-Type'] = 'application/json'
 
-    # verify access is for intended user
-    try:
-        # Specify the CLIENT_ID of the app that accesses the backend:
-        google_auth_request = google.auth.transport.requests.Request()
-        print("google_auth_request:{}".format(google_auth_request))
-        id_info = id_token.verify_oauth2_token(access_token, google_auth_request, CLIENT_ID)
-        print("id_info:{}".format(id_info))
-
-        # Or, if multiple clients access the backend server:
-        # id_info = id_token.verify_oauth2_token(token, google_auth_request)
-        # if id_info['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
-        #     raise ValueError('Could not verify audience.')
-
-        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-
-        # If auth request is from a G Suite domain:
-        # if id_info['hd'] != GSUITE_DOMAIN_NAME:
-        #     raise ValueError('Wrong hosted domain.')
-
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-        user_id = id_info['sub']
-        print("user_id:{}".format(user_id))
-    except ValueError:
-        
-        print("Invalid Token!!!")
-        pass
-
+    print('is result[sub] == user_id?')
     if result['sub'] != user_id:
         authentication_error_message = "Token's user ID does not match given user ID"
         response = make_response(json.dumps(authentication_error_message), 401)
         response.headers['Content-Type'] = 'application/json'
         print(authentication_error_message)
         return response
+    print('yes')
+    print('is result[azp] == CLIENT_ID?')
     if result['azp'] != CLIENT_ID:
         authentication_error_message = "Token's client ID does not match app's"
         response = make_response(json.dumps(authentication_error_message), 401)
         print(authentication_error_message)
         return response
+    print('yes')
     
     stored_user_id = login_session.get('user_id')
     stored_access_token = login_session.get('access_token')
     if stored_access_token is not None and user_id == stored_user_id:
         # user is already logged in
-        response = make_response(json.dumps('current user already logged in'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        return redirect("/login")
 
     # new user just logged in. save in session for future use
     login_session['access_token'] = access_token
@@ -129,6 +142,7 @@ def google_connect():
     login_session['username'] = id_info.get('name')
     login_session['picture'] = id_info.get('picture')
     login_session['email'] = id_info.get('email')
+    login_session['expires_at'] = result.get('iat')
     print("new login_session started: {}".format(login_session))
     return redirect("/login")
 
@@ -136,8 +150,6 @@ def google_connect():
 def google_disconnect():
     login_state = login_session.get('state')
     print('login_session:{}'.format(login_state))
-    data = json.loads(request.data.decode("utf-8"))
-    print('request.data={}'.format(data))
     response_state = request.args.get('state')
     print('response_state:{}'.format(response_state))
     if response_state != login_state:
@@ -151,9 +163,13 @@ def google_disconnect():
         new_login_session()
         return redirect("/login")
 
+
 def new_login_session():
     for key in list(login_session.keys()):
-        login_session.pop(key)
+        if (key == 'expires_at') and (int(login_session[key]) > time.time()):
+            continue
+        else:
+            login_session.pop(key)
     print("login_session cleared: {}".format(login_session))
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state']=state
@@ -163,17 +179,19 @@ def new_login_session():
 
 @app.route('/login', methods=['GET', 'POST'])
 def show_login():
+    print('doing /login')
     if request.method == 'POST':
         print("request.form:{}".format(request.form))
         new_login_session()
         return redirect("/login")
     elif request.method == 'GET':
+        print('doing /login GET')
         if login_session.get('access_token'):
-            print('User is logged into login_session: {}!'.format(login_session))
+            print('User is logged into login_session: {}'.format(login_session))
         else:
-            new_login_session()
-            print('No user is logged into login_session: {}!'.format(login_session))
+            print('No user is logged into login_session: {}'.format(login_session))
         # in this case, server is the client for id provided by oauth service (google)
+        print('rendering login.html, login_session: {}'.format(login_session))
         return render_template('login.html', login_session=login_session)
 
 @app.errorhandler(404)
@@ -375,9 +393,6 @@ def delete_menu_items(restaurant_id, menu_item_id):
             session.commit()
             flash("item deleted")
     return redirect( "/restaurant/{}/menu".format(restaurant.id))
-
-
-
 
 
 if __name__ == '__main__':

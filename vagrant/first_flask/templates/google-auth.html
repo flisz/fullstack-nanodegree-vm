@@ -53,15 +53,22 @@
         // When signin status changes, this function is called.
         // If the signin status is changed to signedIn, we make an API call.
         var signInButton = document.getElementById('signin-button');
-        var signOutDiv = document.getElementById('signout-div');
-        if (isSignedIn) {
+        var signOutButton = document.getElementById('signout-button');
+        if (isSignedIn && '{{login_session.get("access_token")}}' == 'None') {
           signInButton.style.display = 'none';
-          signOutDiv.style.display = 'block';
-          sendToken();
+          signOutButton.style.display = 'none';
+          signOutButton.style.display = 'block';
+          sendToken()
+        } else if (isSignedIn) {
+          signInButton.style.display = 'none';
+          signOutButton.style.display = 'none';
+          signOutButton.style.display = 'block';
           makeApiCall();
         } else {
+          signOutButton.style.display = 'none';
+          signInButton.style.display = 'none';
           signInButton.style.display = 'block';
-          signOutDiv.style.display = 'none';
+          
         }
       }
 
@@ -104,70 +111,59 @@
 
       function sendTokenSuccess() {
         console.log("sendTokenSuccess!");
-        var userIcon = document.getElementById("userIcon");
-        var userPicture = "{{login_session.get('picture')}}";
-        var userName = "{{login_session.get('username')}}";
-        if (userPicture) {
-          userIcon.src = userPicture;
-        }
-        if (userName) {
-          userIcon.alt = userName;  
-        }
-        console.log(userIcon);
+        setTimeout(function() {
+          window.location.href = "/login";
+         }, 500);
       }
 
       function handleSignInClick(event) {
         // Ideally the button should only show up after gapi.client.init finishes, so that this
         // handler won't be called before OAuth is initialized.
         console.log('handleSignInClick')
-        Promise.resolve(gapi.auth2.getAuthInstance().signIn()
-        ).then(function() {}
-        ).catch(handleSignInError(error));
-      }
 
-      function handleSignInError(error) {
-        console.log('Error: ' + error);
-        var userIcon = document.getElementById("userIcon");
-        var userPicture = "{{ url_for('static', filename='jpeg/error_icon.jpeg') }}";
-        var userName = 'Sign In Error: ' + error;
-        userIcon.src = userPicture;
-        userIcon.alt = userName;  
+        Promise.resolve(gapi.auth2.getAuthInstance().signIn()
+        ).then(sendToken()
+        ).catch(function(error){
+          if (error) {
+            console.log('Error: ' + error.error);
+            var userIcon = document.getElementById("userIcon");
+            var userPicture = "{{ url_for('static', filename='jpeg/error_icon.jpeg') }}";
+            var userName = 'Sign In Error: ' + error.error;
+            userIcon.src = userPicture;
+            userIcon.alt = userName;    
+          }
+        });
       }
 
       function handleSignOutClick(event) {
+        console.log('handleSignOutClick -- disconnect')
+        gapi.auth2.getAuthInstance().disconnect();
+        console.log('handleSignOutClick -- after disconnect:')
+        console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
         console.log('handleSignOutClick -- serverEndSession')
         serverEndSession();
-        console.log('handleSignOutClick -- signOut')
-        gapi.auth2.getAuthInstance().signOut();
-        console.log('handleSignOutClick -- after signOut:')
-        console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
       }
 
       function serverEndSession() {
-        var googleUser = gapi.auth2.getAuthInstance().currentUser.get()
-        var id_token = googleUser.getAuthResponse().id_token;
-        var send_this = {
-          'id_token' : id_token,
-        }
-        if (id_token) {
-          $.ajax(
-            {
-              type: 'POST',
-              url: '/google-disconnect?state={{login_session.get("state")}}',
-              processData: false,
-              data: JSON.stringify(send_this),
-              contentType: 'application/json; charset=utf-8',
-              success: sendDisconnectSuccess()                
-            } 
-          ); 
-        }
+        $.ajax(
+          {
+            type: 'POST',
+            url: '/google-disconnect?state={{login_session.get("state")}}',
+            processData: false,
+            contentType: 'application/json; charset=utf-8',
+            success: sendDisconnectSuccess()                
+          } 
+        ); 
       }
 
       function sendDisconnectSuccess() {
         var signInButton = document.getElementById('signin-button');
-        var signOutDiv = document.getElementById('signout-div');
-        signInButton.style.display = 'block';
-        signOutDiv.style.display = 'none';
+        var signOutButton = document.getElementById('signout-button');
+        signInButton.style.display = 'none';
+        signOutButton.style.display = 'none';
+        setTimeout(function() {
+          window.location.href = "/login";
+         }, 500);
       }
 
     </script>
@@ -175,10 +171,18 @@
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
-    <button id="signin-button" onclick="handleSignInClick()">Sign In</button>
-    <div id="signout-div">
-      <img id="userIcon" class="user-icon img-circle">
-      <button id="signout-button" onclick="handleSignOutClick()">Sign Out</button>
+    <div class = "row login-banner">
+      {% if login_session.get('picture') %}
+        <div class = "col-xs-offset-1 col-xs-3 border ">
+          <img src="{{login_session.get('picture')}}" alt="{{login_session.get('username')}}" id="userIcon" class="user-icon img-circle">
+        </div>
+      {% else %}
+        <div class = "col-xs-offset-4 border "></div>
+      {% endif %}
+      <div class = "auth col-xs-8 border">
+        <button id="signin-button" onclick="handleSignInClick()">Sign In</button>
+        <button id="signout-button" onclick="handleSignOutClick()">Sign Out</button>
+      </div>
     </div>
   </body>
 </html>

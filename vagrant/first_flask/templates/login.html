@@ -6,16 +6,23 @@
 {% block content %}
   <div>
     <div>
-      {}
-    </div>
-    <div>
-      <h4>Server Client ID: {{login_session.get("oauth_client_id")}}</h4>
-      <h4>Server State Token: {{login_session.get("state")}}</h4>
-      <h4>Server Has: Access Token: {{login_session.get("access_token")}} </h4>
-      <h4>Server Has: Name: {{login_session.get("username")}}</h4>
-      <h4>Server Has: Image URL: {{login_session.get("picture")}}</h4>
-      <h4><img src='{{login_session.get("picture")}}'></h4>
-      <h4>Server Has: Email: {{login_session.get("email")}}</h4>
+      <h4>Server Client ID: </h4>
+      <div>{{login_session.get("oauth_client_id")}}</div>
+      <h4>Server State Token: </h4>
+      <div>{{login_session.get("state")}}</div>
+      <h4>Server Has Access Token: </h4>
+      <div>{{login_session.get("access_token")}}</div> 
+      <h4>Server Has: Name: </h4>
+      <div>{{login_session.get("username")}}</div>
+      <h4>Server Has: Image URL: </h4>
+      <div>
+        {{login_session.get("picture")}}
+        {% if login_session.get("picture") %}
+          <img src='{{login_session.get("picture")}}'>
+        {% endif %}
+      </div>
+      <h4>Server Has Email:</h4>
+      <div>{{login_session.get("email")}}</div>
     </div>
   </div>
 {% endblock %}
