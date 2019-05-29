@@ -17,10 +17,12 @@
       <h4>Server Has: Image URL: </h4>
       <div>
         {{login_session.get("picture")}}
-        {% if login_session.get("picture") %}
-          <img src='{{login_session.get("picture")}}'>
-        {% endif %}
       </div>
+      {% if login_session.get("picture") %}
+        <div>
+          <img src='{{login_session.get("picture")}}'>
+        </div>
+      {% endif %}
       <h4>Server Has Email:</h4>
       <div>{{login_session.get("email")}}</div>
     </div>

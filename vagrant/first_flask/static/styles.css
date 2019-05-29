@@ -37,6 +37,26 @@ th {
     background-color: #01061c;
 }
 
+#userIcon {
+  padding-top: 10px;
+}
+
+#signout-button {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  z-index: 1;
+}
+
+#signin-button {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  z-index: 2;
+}
+
 td {
     color: #8ea7cc;
     padding: 1vw;

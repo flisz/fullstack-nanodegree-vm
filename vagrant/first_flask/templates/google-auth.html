@@ -173,13 +173,13 @@
     </script>
     <div class = "row login-banner">
       {% if login_session.get('picture') %}
-        <div class = "col-xs-offset-1 col-xs-3 border ">
-          <img src="{{login_session.get('picture')}}" alt="{{login_session.get('username')}}" id="userIcon" class="user-icon img-circle">
+        <div id="userIcon" class = "col-xs-offset-1 col-xs-3 border ">
+          <img src="{{login_session.get('picture')}}" alt="{{login_session.get('username')}}"  class="user-icon img-circle">
         </div>
       {% else %}
         <div class = "col-xs-offset-4 border "></div>
       {% endif %}
-      <div class = "auth col-xs-8 border">
+      <div id="google-access" class = "auth col-xs-8 border">
         <button id="signin-button" onclick="handleSignInClick()">Sign In</button>
         <button id="signout-button" onclick="handleSignOutClick()">Sign Out</button>
       </div>

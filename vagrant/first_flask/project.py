@@ -82,11 +82,11 @@ def google_connect():
             login_session['expires_at'] = exception_message.split()[-1]
 
     if len(id_info) == 0:
-        error_message = "id_info not captured and accessed too often, \
-                         wait until after {} and retry".format(login_session.get('expires_at'))
+        error_message = "id_info not captured and accessed too often," \
+                        "wait until after {} and retry".format(login_session.get('expires_at'))
         response = make_response(json.dumps(error_message), 401)
         response.headers['Content-Type'] = 'application/json'
-        print(authentication_error_message)
+        print(error_message)
         return response
     else:
         try:
