@@ -29,7 +29,8 @@ Vagrant.configure("2") do |config|
     pip3 install sqlalchemy flask-sqlalchemy sqlalchemy_utils 
     pip3 install psycopg2-binary asyncpg
     pip3 install bleach request
-    pip3 install google google-api-python-client quart
+    pip3 install google google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+    pip3 install quart
     pip3 install aiohttp requests
     pip3 install asyncio
 
@@ -40,7 +41,8 @@ Vagrant.configure("2") do |config|
     pip2 install sqlalchemy flask-sqlalchemy sqlalchemy_utils 
     pip2 install psycopg2-binary asyncpg
     pip2 install bleach request
-    pip2 install google google-api-python-client quart
+    pip2 install google google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+    pip2 install quart
     pip2 install aiohttp requests
     pip2 install asyncio
 
