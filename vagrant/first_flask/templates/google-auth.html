@@ -54,21 +54,16 @@
         // If the signin status is changed to signedIn, we make an API call.
         var signInButton = document.getElementById('signin-button');
         var signOutButton = document.getElementById('signout-button');
+        signInButton.style.display = 'none';
+        signOutButton.style.display = 'none';
         if (isSignedIn && '{{login_session.get("access_token")}}' == 'None') {
-          signInButton.style.display = 'none';
-          signOutButton.style.display = 'none';
           signOutButton.style.display = 'block';
           sendToken()
         } else if (isSignedIn) {
-          signInButton.style.display = 'none';
-          signOutButton.style.display = 'none';
           signOutButton.style.display = 'block';
           makeApiCall();
         } else {
-          signOutButton.style.display = 'none';
-          signInButton.style.display = 'none';
           signInButton.style.display = 'block';
-          
         }
       }
 
